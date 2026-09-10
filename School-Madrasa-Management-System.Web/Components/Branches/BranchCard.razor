@@ -1,0 +1,374 @@
+﻿@inject School_Madrasa_Management_System.Web.Services.StudentState StudentState
+
+@implements IDisposable
+
+<div class="branch-card">
+
+    <!-- =========================
+         CARD HEADER
+         ========================= -->
+
+    <div class="branch-card-header">
+
+        <div class="branch-header-left">
+
+            <div class="branch-icon">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+
+                    <rect x="5"
+                          y="3.5"
+                          width="14"
+                          height="17"
+                          rx="1.5" />
+
+                    <path d="M9 20.5V16h6v4.5" />
+
+                    <path d="M9 7h1" />
+                    <path d="M14 7h1" />
+
+                    <path d="M9 10.5h1" />
+                    <path d="M14 10.5h1" />
+
+                    <path d="M9 14h1" />
+                    <path d="M14 14h1" />
+
+                </svg>
+
+            </div>
+
+
+            <div class="branch-title-area">
+
+                <h2>
+                    @BranchName
+                </h2>
+
+                <p>
+                    @Location · Est. @EstablishedYear
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <span class="branch-status">
+            @Status
+        </span>
+
+    </div>
+
+
+    <!-- =========================
+         BRANCH SUMMARY
+         ========================= -->
+
+    <div class="branch-summary">
+
+        <div class="branch-summary-item">
+
+            <strong>
+                @StudentCount
+            </strong>
+
+            <span>
+                Students
+            </span>
+
+        </div>
+
+
+        <div class="branch-summary-item">
+
+            <strong>
+                @Staff
+            </strong>
+
+            <span>
+                Staff
+            </span>
+
+        </div>
+
+
+        <div class="branch-summary-item">
+
+            <strong>
+                @ActiveCount
+            </strong>
+
+            <span>
+                Active
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FINANCIAL INFORMATION
+         ========================= -->
+
+    <div class="branch-financial">
+
+        <!-- Fee Collection -->
+
+        <div class="branch-financial-row">
+
+            <div class="branch-financial-label">
+
+                <span class="financial-icon fee-icon">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <rect x="3.5"
+                              y="6"
+                              width="17"
+                              height="12"
+                              rx="2" />
+
+                        <path d="M3.5 10h17" />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Fee Collection
+                </span>
+
+            </div>
+
+
+            <strong>
+                @FeeCollection
+            </strong>
+
+        </div>
+
+
+        <!-- Total Income -->
+
+        <div class="branch-financial-row">
+
+            <div class="branch-financial-label">
+
+                <span class="financial-icon income-icon">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <path d="M5 17l5-5 3 3 6-7" />
+
+                        <path d="M15 8h4v4" />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Total Income
+                </span>
+
+            </div>
+
+
+            <strong>
+                @TotalIncome
+            </strong>
+
+        </div>
+
+
+        <!-- Total Expenses -->
+
+        <div class="branch-financial-row">
+
+            <div class="branch-financial-label">
+
+                <span class="financial-icon expense-icon">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <path d="M5 7l5 5 3-3 6 7" />
+
+                        <path d="M15 16h4v-4" />
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Total Expenses
+                </span>
+
+            </div>
+
+
+            <strong>
+                @TotalExpenses
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CARD FOOTER
+         ========================= -->
+
+    <div class="branch-card-footer">
+
+        <button type="button"
+                class="branch-details-button"
+                @onclick="HandleDetailsClick">
+
+            Open Branch Details
+
+        </button>
+
+    </div>
+
+</div>
+
+
+@code {
+
+    // =========================
+    // Branch Information
+    // =========================
+
+    [Parameter]
+    public string BranchName { get; set; } = string.Empty;
+
+
+    [Parameter]
+    public string Location { get; set; } = string.Empty;
+
+
+    [Parameter]
+    public int EstablishedYear { get; set; }
+
+
+    [Parameter]
+    public string Status { get; set; } = "Active";
+
+
+    // =========================
+    // Branch Summary
+    // =========================
+
+    [Parameter]
+    public string Students { get; set; } = "—";
+
+
+    [Parameter]
+    public string Staff { get; set; } = "—";
+
+
+    [Parameter]
+    public string ActiveCount { get; set; } = "—";
+
+
+    // =========================
+    // Dynamic Student Count
+    // =========================
+
+    private string StudentCount =>
+        BranchName switch
+        {
+            "Branch 01" => StudentState.Branch01Students.ToString(),
+            "Branch 02" => StudentState.Branch02Students.ToString(),
+            _ => Students
+        };
+
+
+    // =========================
+    // Financial Information
+    // =========================
+
+    [Parameter]
+    public string FeeCollection { get; set; } = "—";
+
+
+    [Parameter]
+    public string TotalIncome { get; set; } = "—";
+
+
+    [Parameter]
+    public string TotalExpenses { get; set; } = "—";
+
+
+    // =========================
+    // Details Button Callback
+    // =========================
+
+    [Parameter]
+    public EventCallback OnDetailsClick { get; set; }
+
+
+    // =========================
+    // State Subscription
+    // =========================
+
+    protected override void OnInitialized()
+    {
+        StudentState.OnChange += HandleStudentStateChanged;
+    }
+
+
+    private void HandleStudentStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+
+    // =========================
+    // Button Handler
+    // =========================
+
+    private async Task HandleDetailsClick()
+    {
+        if (OnDetailsClick.HasDelegate)
+        {
+            await OnDetailsClick.InvokeAsync();
+        }
+    }
+
+
+    // =========================
+    // Dispose
+    // =========================
+
+    public void Dispose()
+    {
+        StudentState.OnChange -= HandleStudentStateChanged;
+    }
+
+}

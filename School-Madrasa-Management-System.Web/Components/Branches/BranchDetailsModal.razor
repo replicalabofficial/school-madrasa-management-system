@@ -1,0 +1,543 @@
+﻿@if (IsOpen)
+{
+    <div class="branch-modal-overlay"
+         @onclick="HandleOverlayClick">
+
+        <div class="branch-modal"
+             @onclick:stopPropagation="true">
+
+            <!-- Modal Header -->
+            <div class="branch-modal-header">
+
+                <div class="branch-modal-title-area">
+
+                    <div class="branch-modal-icon">
+
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+
+                            <rect x="5"
+                                  y="3.5"
+                                  width="14"
+                                  height="17"
+                                  rx="1.5" />
+
+                            <path d="M9 20.5V16h6v4.5" />
+
+                            <path d="M9 7h1" />
+                            <path d="M14 7h1" />
+
+                            <path d="M9 10.5h1" />
+                            <path d="M14 10.5h1" />
+
+                            <path d="M9 14h1" />
+                            <path d="M14 14h1" />
+
+                        </svg>
+
+                    </div>
+
+                    <div>
+                        <h2>@BranchName</h2>
+
+                        <p>
+                            @Location · Est. @EstablishedYear
+                        </p>
+                    </div>
+
+                </div>
+
+                <button type="button"
+                        class="branch-modal-close"
+                        @onclick="Close">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         aria-hidden="true">
+
+                        <path d="M6 6l12 12" />
+                        <path d="M18 6L6 18" />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <!-- Modal Body -->
+            <div class="branch-modal-body">
+
+                <!-- Branch Information -->
+                <div class="branch-modal-section">
+
+                    <div class="branch-modal-section-title">
+                        Branch Information
+                    </div>
+
+                    <div class="branch-info-grid">
+
+                        <div class="branch-info-item">
+                            <span>Branch Name</span>
+                            <strong>@BranchName</strong>
+                        </div>
+
+                        <div class="branch-info-item">
+                            <span>Location</span>
+                            <strong>@Location</strong>
+                        </div>
+
+                        <div class="branch-info-item">
+                            <span>Established</span>
+                            <strong>@EstablishedYear</strong>
+                        </div>
+
+                        <div class="branch-info-item">
+                            <span>Status</span>
+                            <strong class="status-active">@Status</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Academic Overview -->
+                <div class="branch-modal-section">
+
+                    <div class="branch-modal-section-title">
+                        Academic Overview
+                    </div>
+
+                    <div class="branch-detail-stats">
+
+                        <div class="branch-detail-stat">
+
+                            <div class="detail-stat-icon students-icon">
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+
+                                </svg>
+                            </div>
+
+                            <div>
+                                <strong>@TotalStudents</strong>
+                                <span>Total Students</span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="branch-detail-stat">
+
+                            <div class="detail-stat-icon staff-icon">
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+
+                                    <rect x="3"
+                                          y="4"
+                                          width="18"
+                                          height="16"
+                                          rx="2" />
+
+                                    <path d="M8 8h8" />
+                                    <path d="M8 12h8" />
+                                    <path d="M8 16h5" />
+
+                                </svg>
+                            </div>
+
+                            <div>
+                                <strong>@TeachersStaff</strong>
+                                <span>Teachers & Staff</span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="branch-detail-stat">
+
+                            <div class="detail-stat-icon active-icon">
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+
+                                    <circle cx="12"
+                                            cy="12"
+                                            r="9" />
+
+                                    <path d="M8 12l2.5 2.5L16 9" />
+
+                                </svg>
+                            </div>
+
+                            <div>
+                                <strong>@ActiveStudents</strong>
+                                <span>Active Students</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Financial Overview -->
+                <div class="branch-modal-section">
+
+                    <div class="branch-modal-section-title">
+                        Financial Overview
+                    </div>
+
+                    <div class="branch-financial-details">
+
+                        <!-- Fees Collected -->
+                        <div class="branch-financial-detail-row">
+
+                            <div class="financial-detail-label">
+
+                                <span class="detail-financial-icon fee-detail-icon">
+
+                                    <svg viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.8"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         aria-hidden="true">
+
+                                        <rect x="3.5"
+                                              y="6"
+                                              width="17"
+                                              height="12"
+                                              rx="2" />
+
+                                        <path d="M3.5 10h17" />
+
+                                    </svg>
+
+                                </span>
+
+                                <span>Fees Collected</span>
+
+                            </div>
+
+                            <strong>@FeesCollected</strong>
+
+                        </div>
+
+
+                        <!-- Pending Fees -->
+                        <div class="branch-financial-detail-row">
+
+                            <div class="financial-detail-label">
+
+                                <span class="detail-financial-icon pending-detail-icon">
+
+                                    <svg viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.8"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         aria-hidden="true">
+
+                                        <circle cx="12"
+                                                cy="12"
+                                                r="9" />
+
+                                        <path d="M12 7v5l3 2" />
+
+                                    </svg>
+
+                                </span>
+
+                                <span>Pending Fees</span>
+
+                            </div>
+
+                            <strong>@PendingFees</strong>
+
+                        </div>
+
+
+                        <!-- Total Income -->
+                        <div class="branch-financial-detail-row">
+
+                            <div class="financial-detail-label">
+
+                                <span class="detail-financial-icon income-detail-icon">
+
+                                    <svg viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.8"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         aria-hidden="true">
+
+                                        <path d="M5 17l5-5 3 3 6-7" />
+                                        <path d="M15 8h4v4" />
+
+                                    </svg>
+
+                                </span>
+
+                                <span>Total Income</span>
+
+                            </div>
+
+                            <strong>@TotalIncome</strong>
+
+                        </div>
+
+
+                        <!-- Total Expenses -->
+                        <div class="branch-financial-detail-row">
+
+                            <div class="financial-detail-label">
+
+                                <span class="detail-financial-icon expense-detail-icon">
+
+                                    <svg viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.8"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         aria-hidden="true">
+
+                                        <path d="M5 7l5 5 3-3 6 7" />
+                                        <path d="M15 16h4v-4" />
+
+                                    </svg>
+
+                                </span>
+
+                                <span>Total Expenses</span>
+
+                            </div>
+
+                            <strong>@TotalExpenses</strong>
+
+                        </div>
+
+
+                        <!-- Total Salaries -->
+                        <div class="branch-financial-detail-row">
+
+                            <div class="financial-detail-label">
+
+                                <span class="detail-financial-icon salary-detail-icon">
+
+                                    <svg viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.8"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         aria-hidden="true">
+
+                                        <rect x="3"
+                                              y="5"
+                                              width="18"
+                                              height="14"
+                                              rx="2" />
+
+                                        <circle cx="12"
+                                                cy="12"
+                                                r="3" />
+
+                                        <path d="M7 9h.01" />
+                                        <path d="M17 15h.01" />
+
+                                    </svg>
+
+                                </span>
+
+                                <span>Total Salaries</span>
+
+                            </div>
+
+                            <strong>@TotalSalaries</strong>
+
+                        </div>
+
+
+                        <!-- Net Balance -->
+                        <div class="branch-financial-detail-row net-balance-row">
+
+                            <div class="financial-detail-label">
+
+                                <span class="detail-financial-icon balance-detail-icon">
+
+                                    <svg viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.8"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         aria-hidden="true">
+
+                                        <circle cx="12"
+                                                cy="12"
+                                                r="9" />
+
+                                        <path d="M8 12h8" />
+                                        <path d="M12 8v8" />
+
+                                    </svg>
+
+                                </span>
+
+                                <span>Net Balance</span>
+
+                            </div>
+
+                            <strong>@NetBalance</strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Pending Fees Note -->
+                <div class="branch-modal-note">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <circle cx="12"
+                                cy="12"
+                                r="9" />
+
+                        <path d="M12 10v6" />
+                        <path d="M12 7h.01" />
+
+                    </svg>
+
+                    <span>
+                        Pending fees are calculated across active students.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Modal Footer -->
+            <div class="branch-modal-footer">
+
+                <button type="button"
+                        class="branch-modal-close-button"
+                        @onclick="Close">
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+@code {
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter]
+    public string BranchName { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Location { get; set; } = string.Empty;
+
+    [Parameter]
+    public int EstablishedYear { get; set; }
+
+    [Parameter]
+    public string Status { get; set; } = "Active";
+
+    [Parameter]
+    public string TotalStudents { get; set; } = "—";
+
+    [Parameter]
+    public string TeachersStaff { get; set; } = "—";
+
+    [Parameter]
+    public string ActiveStudents { get; set; } = "—";
+
+    [Parameter]
+    public string FeesCollected { get; set; } = "—";
+
+    [Parameter]
+    public string PendingFees { get; set; } = "—";
+
+    [Parameter]
+    public string TotalIncome { get; set; } = "—";
+
+    [Parameter]
+    public string TotalExpenses { get; set; } = "—";
+
+    [Parameter]
+    public string TotalSalaries { get; set; } = "—";
+
+    [Parameter]
+    public string NetBalance { get; set; } = "—";
+
+
+    private async Task Close()
+    {
+        IsOpen = false;
+
+        await IsOpenChanged.InvokeAsync(false);
+    }
+
+
+    private async Task HandleOverlayClick()
+    {
+        await Close();
+    }
+
+}

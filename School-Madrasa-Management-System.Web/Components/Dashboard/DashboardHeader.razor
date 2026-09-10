@@ -1,0 +1,15 @@
+﻿<div class="dashboard-header">
+    <div class="dashboard-header-content">
+        <h1>@DashboardTitle</h1>
+        <p>@DashboardSubtitle</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string DashboardTitle { get; set; } = "Head Office Dashboard";
+
+    [Parameter]
+    public string DashboardSubtitle { get; set; } =
+        "Academic Year 2025-26 · Combined Data";
+}

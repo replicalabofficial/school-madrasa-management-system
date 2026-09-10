@@ -1,0 +1,641 @@
+﻿@rendermode InteractiveServer
+
+<div class="financial-overview">
+
+    <!-- HEADER -->
+
+    <div class="financial-header">
+        <div>
+            <h2>Monthly Financial Overview</h2>
+            <p>@PeriodText</p>
+        </div>
+    </div>
+
+
+    <!-- CHART -->
+
+    <div class="chart-container">
+
+        <!-- Y AXIS -->
+
+        <div class="chart-y-axis">
+
+            @for (int i = ChartDivisions; i >= 0; i--)
+            {
+                <span>@FormatAxisValue(i * AxisStep)</span>
+            }
+
+        </div>
+
+
+        <!-- CHART AREA -->
+
+        <div class="chart-area">
+
+            <!-- GRID -->
+
+            <div class="chart-grid">
+
+                @for (int i = 0; i <= ChartDivisions; i++)
+                {
+                    <div></div>
+                }
+
+            </div>
+
+
+            <!-- SVG -->
+
+            <svg class="financial-chart"
+                 viewBox="0 0 700 300"
+                 preserveAspectRatio="none">
+
+                <!-- EXPENSE LINE -->
+
+                <polyline points="@ExpensesPoints"
+                          fill="none"
+                          stroke="#ef4444"
+                          stroke-width="3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round" />
+
+
+                <!-- INCOME LINE -->
+
+                <polyline points="@IncomePoints"
+                          fill="none"
+                          stroke="#2563eb"
+                          stroke-width="3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round" />
+
+
+                <!-- HOVER AREAS -->
+                @for (int i = 0; i < FinancialData.Count; i++)
+                {
+                    var index = i;
+
+                    <rect class="chart-hover-zone"
+                          x="@GetHoverX(index)"
+                          y="0"
+                          width="@GetHoverWidth()"
+                          height="300"
+                          fill="transparent"
+                          style="pointer-events:all;"
+                          @onmouseover="() => SelectMonth(index)" />
+
+
+                    <!-- EXPENSE POINT -->
+
+                    <circle class="chart-point expense-point @(SelectedIndex == index ? "selected-chart-point" : "")"
+                            cx="@GetX(index)"
+                            cy="@GetY(FinancialData[index].Expenses)"
+                            r="@(SelectedIndex == index ? 7 : 4)" />
+
+
+                    <!-- INCOME POINT -->
+
+                    <circle class="chart-point income-point @(SelectedIndex == index ? "selected-chart-point" : "")"
+                            cx="@GetX(index)"
+                            cy="@GetY(FinancialData[index].Income)"
+                            r="@(SelectedIndex == index ? 7 : 4)" />
+                }
+
+            </svg>
+
+
+            <!-- MOVING TOOLTIP -->
+            @if (FinancialData.Count > 0)
+            {
+                <div class="chart-tooltip"
+                     style="@TooltipStyle">
+
+                    <div class="tooltip-month">
+                        @CurrentMonth.Month
+                    </div>
+
+
+                    <!-- EXPENSE -->
+
+                    <div class="tooltip-row">
+
+                        <span class="tooltip-dot expense"></span>
+
+                        <span>Expenses</span>
+
+                        <strong>
+                            @FormatCurrency(CurrentMonth.Expenses)
+                        </strong>
+
+                    </div>
+
+
+                    <!-- INCOME -->
+
+                    <div class="tooltip-row">
+
+                        <span class="tooltip-dot income"></span>
+
+                        <span>Income</span>
+
+                        <strong>
+                            @FormatCurrency(CurrentMonth.Income)
+                        </strong>
+
+                    </div>
+
+                </div>
+            }
+
+
+            <!-- MONTH LABELS -->
+
+            <div class="chart-months">
+
+                @foreach (var item in FinancialData)
+                {
+                    <span>@item.Month</span>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LEGEND -->
+
+    <div class="chart-legend">
+
+        <div class="legend-item">
+            <span class="legend-line expenses"></span>
+            <span>Expenses</span>
+        </div>
+
+        <div class="legend-item">
+            <span class="legend-line income"></span>
+            <span>Income</span>
+        </div>
+
+    </div>
+
+</div>
+
+
+@code {
+
+    /* =========================================
+       ROLE
+    ========================================= */
+
+    [Parameter]
+    public string UserType { get; set; } = "head-office";
+
+
+    /* =========================================
+       CHART SCALE
+
+900K / 5 =
+       180K per division
+
+900K
+       720K
+       540K
+       360K
+       180K
+       0
+    ========================================= */
+
+    private const decimal ChartMaxValue = 900000m;
+
+    private const int ChartDivisions = 5;
+
+    private decimal AxisStep =>
+        ChartMaxValue / ChartDivisions;
+
+
+    /* =========================================
+       SELECTED MONTH
+    ========================================= */
+
+    private int SelectedIndex { get; set; } = 0;
+
+
+    /* =========================================
+       CURRENT MONTH
+    ========================================= */
+
+    private FinancialItem CurrentMonth
+    {
+        get
+        {
+            if (FinancialData.Count == 0)
+            {
+                return new FinancialItem();
+            }
+
+            return FinancialData[
+                Math.Clamp(
+                    SelectedIndex,
+                    0,
+                    FinancialData.Count - 1
+                )
+            ];
+        }
+    }
+
+
+    /* =========================================
+       FINANCIAL DATA
+
+Temporary frontend demo data.
+    ========================================= */
+
+    private List<FinancialItem> FinancialData =>
+        UserType switch
+        {
+            /* =====================================
+               BRANCH 01
+            ===================================== */
+
+            "branch-01" => new List<FinancialItem>
+            {
+                new()
+                {
+                    Month = "Mar",
+                    Income = 85000,
+                    Expenses = 28000
+                },
+
+                new()
+                {
+                    Month = "Apr",
+                    Income = 95000,
+                    Expenses = 32000
+                },
+
+                new()
+                {
+                    Month = "May",
+                    Income = 105000,
+                    Expenses = 30000
+                },
+
+                new()
+                {
+                    Month = "Jun",
+                    Income = 115000,
+                    Expenses = 35000
+                },
+
+                new()
+                {
+                    Month = "Jul",
+                    Income = 125000,
+                    Expenses = 33000
+                },
+
+                new()
+                {
+                    Month = "Aug",
+                    Income = 158000,
+                    Expenses = 35000
+                }
+            },
+
+
+            /* =====================================
+               BRANCH 02
+            ===================================== */
+
+            "branch-02" => new List<FinancialItem>
+            {
+                new()
+                {
+                    Month = "Mar",
+                    Income = 100000,
+                    Expenses = 30000
+                },
+
+                new()
+                {
+                    Month = "Apr",
+                    Income = 120000,
+                    Expenses = 34000
+                },
+
+                new()
+                {
+                    Month = "May",
+                    Income = 135000,
+                    Expenses = 36000
+                },
+
+                new()
+                {
+                    Month = "Jun",
+                    Income = 150000,
+                    Expenses = 38000
+                },
+
+                new()
+                {
+                    Month = "Jul",
+                    Income = 170000,
+                    Expenses = 40000
+                },
+
+                new()
+                {
+                    Month = "Aug",
+                    Income = 187000,
+                    Expenses = 42000
+                }
+            },
+
+
+            /* =====================================
+               HEAD OFFICE
+            ===================================== */
+
+            _ => new List<FinancialItem>
+            {
+                new()
+                {
+                    Month = "Mar",
+                    Income = 245000,
+                    Expenses = 120000
+                },
+
+                new()
+                {
+                    Month = "Apr",
+                    Income = 312000,
+                    Expenses = 160000
+                },
+
+                new()
+                {
+                    Month = "May",
+                    Income = 365000,
+                    Expenses = 145000
+                },
+
+                new()
+                {
+                    Month = "Jun",
+                    Income = 410000,
+                    Expenses = 175000
+                },
+
+                new()
+                {
+                    Month = "Jul",
+                    Income = 480000,
+                    Expenses = 135000
+                },
+
+                new()
+                {
+                    Month = "Aug",
+                    Income = 545000,
+                    Expenses = 122000
+                }
+            }
+        };
+
+
+    /* =========================================
+       PERIOD TEXT
+    ========================================= */
+
+    private string PeriodText =>
+        UserType switch
+        {
+            "branch-01" =>
+                "Branch 01 · Mar–Aug 2025",
+
+            "branch-02" =>
+                "Branch 02 · Mar–Aug 2025",
+
+            _ =>
+                "Mar–Aug 2025"
+        };
+
+
+    /* =========================================
+       INCOME LINE
+    ========================================= */
+
+    private string IncomePoints =>
+        string.Join(
+            " ",
+            FinancialData.Select(
+                (item, index) =>
+                    $"{GetX(index)},{GetY(item.Income)}"
+            )
+        );
+
+
+    /* =========================================
+       EXPENSE LINE
+    ========================================= */
+
+    private string ExpensesPoints =>
+        string.Join(
+            " ",
+            FinancialData.Select(
+                (item, index) =>
+                    $"{GetX(index)},{GetY(item.Expenses)}"
+            )
+        );
+
+
+    /* =========================================
+       X POSITION
+    ========================================= */
+
+    private double GetX(int index)
+    {
+        if (FinancialData.Count <= 1)
+        {
+            return 350;
+        }
+
+        return 35 +
+               index *
+               (630.0 / (FinancialData.Count - 1));
+    }
+
+
+    /* =========================================
+       Y POSITION
+    ========================================= */
+
+    private double GetY(decimal value)
+    {
+        const double chartHeight = 260;
+
+        double normalized =
+            (double)(value / ChartMaxValue);
+
+        normalized =
+            Math.Clamp(
+                normalized,
+                0,
+                1
+            );
+
+        return 280 -
+               (normalized * chartHeight);
+    }
+
+
+    /* =========================================
+       HOVER X
+    ========================================= */
+
+    private double GetHoverX(int index)
+    {
+        if (FinancialData.Count <= 1)
+        {
+            return 0;
+        }
+
+        return index *
+               (700.0 / FinancialData.Count);
+    }
+
+
+    /* =========================================
+       HOVER WIDTH
+    ========================================= */
+
+    private double GetHoverWidth()
+    {
+        if (FinancialData.Count <= 0)
+        {
+            return 700;
+        }
+
+        return 700.0 /
+               FinancialData.Count;
+    }
+
+
+    /* =========================================
+       TOOLTIP POSITION
+
+Tooltip moves with selected month.
+    ========================================= */
+
+    private double TooltipLeft
+    {
+        get
+        {
+            if (FinancialData.Count <= 1)
+            {
+                return 50;
+            }
+
+            double percentage =
+                ((double)SelectedIndex /
+                (FinancialData.Count - 1)) * 100;
+
+            return percentage;
+        }
+    }
+
+
+    /* =========================================
+       TOOLTIP STYLE
+
+First / last month need special
+       positioning so tooltip does not
+       go outside the card.
+    ========================================= */
+
+    private string TooltipStyle
+    {
+        get
+        {
+            if (FinancialData.Count <= 1)
+            {
+                return "left:50%;transform:translateX(-50%);";
+            }
+
+            if (SelectedIndex == 0)
+            {
+                return "left:4%;transform:translateX(0);";
+            }
+
+            if (SelectedIndex == FinancialData.Count - 1)
+            {
+                return "left:96%;transform:translateX(-100%);";
+            }
+
+            return $"left:{TooltipLeft:F2}%;transform:translateX(-50%);";
+        }
+    }
+
+
+    /* =========================================
+       SELECT MONTH
+    ========================================= */
+
+    private void SelectMonth(int index)
+    {
+        if (index < 0 ||
+            index >= FinancialData.Count)
+        {
+            return;
+        }
+
+        if (SelectedIndex == index)
+        {
+            return;
+        }
+
+        SelectedIndex = index;
+    }
+
+
+    /* =========================================
+       AXIS FORMAT
+    ========================================= */
+
+    private string FormatAxisValue(decimal value)
+    {
+        if (value >= 1000)
+        {
+            return $"{value / 1000:0.#}K";
+        }
+
+        return value.ToString("0");
+    }
+
+
+    /* =========================================
+       CURRENCY FORMAT
+    ========================================= */
+
+    private string FormatCurrency(decimal amount)
+    {
+        return $"Rs. {amount:N0}";
+    }
+
+
+    /* =========================================
+       DATA MODEL
+    ========================================= */
+
+    private class FinancialItem
+    {
+        public string Month { get; set; } = string.Empty;
+
+        public decimal Income { get; set; }
+
+        public decimal Expenses { get; set; }
+    }
+}

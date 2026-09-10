@@ -1,0 +1,179 @@
+﻿@rendermode InteractiveServer
+@implements IDisposable
+@inject School_Madrasa_Management_System.Web.Services.UserRoleState RoleState
+
+<div class="user-dropdown-wrapper">
+
+    <!-- User Profile Button -->
+    <button type="button"
+            class="topbar-user-profile"
+            aria-label="Open user menu"
+            aria-expanded="@IsOpen"
+            @onclick="ToggleDropdown">
+
+        <!-- Avatar -->
+        <span class="user-avatar">
+            M
+        </span>
+
+        <!-- User Information -->
+        <span class="user-details">
+
+            <span class="user-name">
+                @RoleState.UserName
+            </span>
+
+            <span class="user-role">
+                @RoleState.TopbarRole
+            </span>
+
+        </span>
+
+        <!-- Dropdown Arrow -->
+        <svg class="user-chevron @(IsOpen ? "open" : "")"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true">
+
+            <polyline points="6 9 12 15 18 9" />
+
+        </svg>
+
+    </button>
+
+
+    @if (IsOpen)
+    {
+        <div class="user-dropdown">
+
+            <!-- Dropdown User Info -->
+            <div class="dropdown-user-info">
+
+                <div class="dropdown-avatar">
+                    M
+                </div>
+
+                <div class="dropdown-user-details">
+
+                    <div class="dropdown-user-name">
+                        @RoleState.UserName
+                    </div>
+
+                    <div class="dropdown-user-role">
+                        @RoleState.UserRole
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="dropdown-divider"></div>
+
+
+            <!-- Settings -->
+            <NavLink href="/settings"
+                     class="dropdown-item"
+                     @onclick="CloseDropdown">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+
+                    <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+
+                    <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.5 1.5-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.04 1.56V20h-2.12v-.4a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.5-1.5.06-.06A1.7 1.7 0 0 0 9.12 15a1.7 1.7 0 0 0-1.56-1.04H7.2v-2.12h.36A1.7 1.7 0 0 0 9.12 10.8a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.5-1.5.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 13.2 6.2V6h2.12v.2a1.7 1.7 0 0 0 1.04 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.5 1.5-.06.06a1.7 1.7 0 0 0-.34 1.88A1.7 1.7 0 0 0 20.96 12h.34v2.12h-.34A1.7 1.7 0 0 0 19.4 15z" />
+
+                </svg>
+
+                <span>Settings</span>
+
+            </NavLink>
+
+
+            <div class="dropdown-divider"></div>
+
+
+            <!-- Sign Out -->
+            <button type="button"
+                    class="dropdown-item sign-out-item"
+                    @onclick="HandleSignOut">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+
+                    <polyline points="16 17 21 12 16 7" />
+
+                    <line x1="21" y1="12" x2="9" y2="12" />
+
+                </svg>
+
+                <span>Sign Out</span>
+
+            </button>
+
+        </div>
+    }
+
+</div>
+
+
+@code {
+
+    private bool IsOpen { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        RoleState.OnChange += HandleRoleStateChanged;
+    }
+
+
+    private void HandleRoleStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+
+    private void ToggleDropdown()
+    {
+        IsOpen = !IsOpen;
+    }
+
+
+    private void CloseDropdown()
+    {
+        IsOpen = false;
+    }
+
+
+    private void HandleSignOut()
+    {
+        IsOpen = false;
+
+        // Authentication / logout functionality
+        // will be connected later.
+    }
+
+
+    public void Dispose()
+    {
+        RoleState.OnChange -= HandleRoleStateChanged;
+    }
+
+}

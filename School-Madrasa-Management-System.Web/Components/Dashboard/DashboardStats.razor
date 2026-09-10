@@ -1,0 +1,234 @@
+﻿@inject School_Madrasa_Management_System.Web.Services.StudentState StudentState
+
+@implements IDisposable
+
+
+<div class="dashboard-stats">
+
+    @foreach (var stat in Stats)
+    {
+        <div class="stat-card">
+
+            <div class="stat-card-content">
+                <div class="stat-label">@stat.Label</div>
+                <div class="stat-value">@stat.Value</div>
+
+                @if (!string.IsNullOrWhiteSpace(stat.Change))
+                {
+                    <div class="stat-change">
+                        @stat.Change
+                    </div>
+                }
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string UserType { get; set; } = "head-office";
+
+
+    protected override void OnInitialized()
+    {
+        StudentState.OnChange += HandleStudentStateChanged;
+    }
+
+
+    private void HandleStudentStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+
+    private List<DashboardStatItem> Stats => UserType switch
+    {
+        "branch-01" => new List<DashboardStatItem>
+        {
+            new()
+            {
+                Label = "Total Students",
+                Value = StudentState.Branch01Students.ToString(),
+                Change = "+2%"
+            },
+
+            new()
+            {
+                Label = "Teachers & Staff",
+                Value = "4"
+            },
+
+            new()
+            {
+                Label = "Fees Collected",
+                Value = "Rs. 6,500",
+                Change = "+5%"
+            },
+
+            new()
+            {
+                Label = "Pending Fees",
+                Value = "—"
+            },
+
+            new()
+            {
+                Label = "Total Income",
+                Value = "Rs. 158K",
+                Change = "+6%"
+            },
+
+            new()
+            {
+                Label = "Total Expenses",
+                Value = "Rs. 35K"
+            },
+
+            new()
+            {
+                Label = "Total Salaries",
+                Value = "—"
+            },
+
+            new()
+            {
+                Label = "Net Balance",
+                Value = "Rs. 123K",
+                Change = "+4%"
+            }
+        },
+
+
+        "branch-02" => new List<DashboardStatItem>
+        {
+            new()
+            {
+                Label = "Total Students",
+                Value = StudentState.Branch02Students.ToString(),
+                Change = "+2%"
+            },
+
+            new()
+            {
+                Label = "Teachers & Staff",
+                Value = "4"
+            },
+
+            new()
+            {
+                Label = "Fees Collected",
+                Value = "Rs. 10,000",
+                Change = "+8%"
+            },
+
+            new()
+            {
+                Label = "Pending Fees",
+                Value = "—"
+            },
+
+            new()
+            {
+                Label = "Total Income",
+                Value = "Rs. 187K",
+                Change = "+7%"
+            },
+
+            new()
+            {
+                Label = "Total Expenses",
+                Value = "—"
+            },
+
+            new()
+            {
+                Label = "Total Salaries",
+                Value = "—"
+            },
+
+            new()
+            {
+                Label = "Net Balance",
+                Value = "—",
+                Change = ""
+            }
+        },
+
+
+        _ => new List<DashboardStatItem>
+        {
+            new()
+            {
+                Label = "Total Students",
+                Value = StudentState.TotalStudents.ToString(),
+                Change = "+4%"
+            },
+
+            new()
+            {
+                Label = "Teachers & Staff",
+                Value = "10"
+            },
+
+            new()
+            {
+                Label = "Fees Collected",
+                Value = "Rs. 16,500",
+                Change = "+12%"
+            },
+
+            new()
+            {
+                Label = "Pending Fees",
+                Value = "Rs. 11,500"
+            },
+
+            new()
+            {
+                Label = "Total Income",
+                Value = "Rs. 545K",
+                Change = "+8%"
+            },
+
+            new()
+            {
+                Label = "Total Expenses",
+                Value = "Rs. 122K"
+            },
+
+            new()
+            {
+                Label = "Total Salaries",
+                Value = "Rs. 356K"
+            },
+
+            new()
+            {
+                Label = "Net Balance",
+                Value = "Rs. 67,000",
+                Change = "+5%"
+            }
+        }
+    };
+
+
+    private class DashboardStatItem
+    {
+        public string Label { get; set; } = string.Empty;
+
+        public string Value { get; set; } = string.Empty;
+
+        public string Change { get; set; } = string.Empty;
+    }
+
+
+    public void Dispose()
+    {
+        StudentState.OnChange -= HandleStudentStateChanged;
+    }
+
+}

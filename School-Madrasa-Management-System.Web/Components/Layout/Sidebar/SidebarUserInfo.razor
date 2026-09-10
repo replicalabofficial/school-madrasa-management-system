@@ -1,0 +1,28 @@
+﻿<div class="sidebar-user-info">
+
+    <div class="logged-in-label">
+        Logged in as
+    </div>
+
+    <div class="user-name">
+        @UserName
+    </div>
+
+    <div class="user-role">
+        @UserRole
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string UserType { get; set; } = "head-office";
+
+    [Parameter]
+    public string UserName { get; set; } = "Mr. Adnan";
+
+    [Parameter]
+    public string UserRole { get; set; } = "Head Office Admin";
+
+}

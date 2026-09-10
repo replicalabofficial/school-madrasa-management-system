@@ -1,0 +1,780 @@
+﻿@page "/students"
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+
+@inject School_Madrasa_Management_System.Web.Services.UserRoleState RoleState
+@inject School_Madrasa_Management_System.Web.Services.StudentState StudentState
+
+@implements IDisposable
+
+<PageTitle>Students - Alikhwan Management System</PageTitle>
+
+
+<div class="students-page">
+
+    <!-- =========================================
+         PAGE HEADER
+         ========================================= -->
+
+    <div class="students-page-header">
+
+        <div class="students-header-content">
+
+            <h1>
+                Students
+            </h1>
+
+            <p>
+                @FilteredStudents.Count students total
+            </p>
+
+        </div>
+
+
+        <button type="button"
+                class="add-student-button"
+                @onclick="OpenAddStudent">
+
+            <span class="add-icon">
+                +
+            </span>
+
+            <span>
+                Add Student
+            </span>
+
+        </button>
+
+    </div>
+
+
+    <!-- =========================================
+         TABLE CARD
+         ========================================= -->
+
+    <div class="students-table-card">
+
+        <!-- =====================================
+             TOOLBAR
+             ===================================== -->
+
+        <div class="students-toolbar">
+
+            <!-- SEARCH -->
+
+            <div class="student-search">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+
+                    <circle cx="11"
+                            cy="11"
+                            r="6.5" />
+
+                    <path d="M16 16l4.5 4.5" />
+
+                </svg>
+
+
+                <input type="text"
+                       placeholder="Search students..."
+                       @bind="SearchText"
+                       @bind:event="oninput" />
+
+            </div>
+
+
+            <!-- TOOLBAR ACTIONS -->
+
+            <div class="students-toolbar-actions">
+
+                <!-- FILTER -->
+
+                <button type="button"
+                        class="students-tool-button @(IsFilterOpen ? "active" : "")"
+                        @onclick="ToggleFilter">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <path d="M4 5h16" />
+
+                        <path d="M7 12h10" />
+
+                        <path d="M10 19h4" />
+
+                    </svg>
+
+                    <span>
+                        Filter
+                    </span>
+
+                </button>
+
+
+                <!-- EXPORT -->
+
+                <button type="button"
+                        class="students-tool-button"
+                        @onclick="ExportStudents">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <path d="M12 3v11" />
+
+                        <path d="M8 10l4 4 4-4" />
+
+                        <path d="M5 18v2h14v-2" />
+
+                    </svg>
+
+                    <span>
+                        Export
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             FILTER PANEL
+             ===================================== -->
+        @if (IsFilterOpen)
+        {
+            <div class="students-filter-panel">
+
+                <div class="students-filter-header">
+
+                    <div>
+
+                        <h3>
+                            Filter Students
+                        </h3>
+
+                        <p>
+                            Filter students by class and status.
+                        </p>
+
+                    </div>
+
+
+                    <button type="button"
+                            class="filter-close-button"
+                            @onclick="CloseFilter">
+
+                        ×
+
+                    </button>
+
+                </div>
+
+
+                <div class="students-filter-fields">
+
+                    <!-- BRANCH FILTER
+                         HEAD OFFICE ONLY -->
+                    @if (RoleState.CurrentRole == "head-office")
+                    {
+                        <div class="students-filter-field">
+
+                            <label for="student-branch-filter">
+                                Branch
+                            </label>
+
+                            <select id="student-branch-filter"
+                                    @bind="SelectedBranch">
+
+                                <option value="all">
+                                    All Branches
+                                </option>
+
+                                <option value="Branch 01">
+                                    Branch 01
+                                </option>
+
+                                <option value="Branch 02">
+                                    Branch 02
+                                </option>
+
+                            </select>
+
+                        </div>
+                    }
+
+
+                    <!-- CLASS FILTER -->
+
+                    <div class="students-filter-field">
+
+                        <label for="student-class-filter">
+                            Class
+                        </label>
+
+                        <select id="student-class-filter"
+                                @bind="SelectedClass">
+
+                            <option value="all">
+                                All Classes
+                            </option>
+
+                            <option value="Grade 1">
+                                Grade 1
+                            </option>
+
+                            <option value="Grade 2">
+                                Grade 2
+                            </option>
+
+                            <option value="Grade 3">
+                                Grade 3
+                            </option>
+
+                            <option value="Grade 4">
+                                Grade 4
+                            </option>
+
+                            <option value="Grade 5">
+                                Grade 5
+                            </option>
+
+                            <option value="Grade 6">
+                                Grade 6
+                            </option>
+
+                            <option value="Grade 7">
+                                Grade 7
+                            </option>
+
+                            <option value="Grade 8">
+                                Grade 8
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- STATUS FILTER -->
+
+                    <div class="students-filter-field">
+
+                        <label for="student-status-filter">
+                            Status
+                        </label>
+
+                        <select id="student-status-filter"
+                                @bind="SelectedStatus">
+
+                            <option value="all">
+                                All Status
+                            </option>
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FILTER ACTIONS -->
+
+                <div class="students-filter-actions">
+
+                    <button type="button"
+                            class="filter-clear-button"
+                            @onclick="ClearFilters">
+
+                        Clear Filters
+
+                    </button>
+
+
+                    <button type="button"
+                            class="filter-apply-button"
+                            @onclick="ApplyFilters">
+
+                        Apply Filters
+
+                    </button>
+
+                </div>
+
+            </div>
+        }
+
+
+        <!-- =====================================
+             STUDENT TABLE
+             ===================================== -->
+
+        <StudentTable Students="FilteredStudents"
+                      OnView="ViewStudent"
+                      OnEdit="EditStudent"
+                      OnDelete="DeleteStudent" />
+
+    </div>
+
+
+    <!-- =========================================
+         ADD / EDIT STUDENT MODAL
+         ========================================= -->
+
+    <StudentModal IsOpen="IsStudentModalOpen"
+                  OnClose="CloseStudentModal"
+                  OnStudentAdded="HandleStudentAdded"
+                  OnStudentEdited="HandleStudentEdited"
+                  EditingStudent="EditingStudent"
+                  UserType="@RoleState.CurrentRole" />
+
+
+    <!-- =========================================
+         VIEW DETAILS MODAL
+         ========================================= -->
+
+    <StudentDetailsModal IsOpen="IsStudentDetailsOpen"
+                         Student="SelectedStudent"
+                         OnClose="CloseStudentDetails" />
+
+
+    <!-- =========================================
+         DELETE CONFIRMATION MODAL
+         ========================================= -->
+
+    <StudentDeleteModal IsOpen="IsDeleteModalOpen"
+                        Student="StudentToDelete"
+                        OnClose="CloseDeleteModal"
+                        OnDeleteConfirmed="HandleDeleteConfirmed" />
+
+</div>
+
+
+@code {
+
+    // =========================================
+    // ADD / EDIT MODAL
+    // =========================================
+
+    private bool IsStudentModalOpen { get; set; }
+
+
+    private StudentTable.StudentRow? EditingStudent { get; set; }
+
+
+    // =========================================
+    // VIEW DETAILS MODAL
+    // =========================================
+
+    private bool IsStudentDetailsOpen { get; set; }
+
+
+    private StudentTable.StudentRow? SelectedStudent { get; set; }
+
+
+    // =========================================
+    // DELETE MODAL
+    // =========================================
+
+    private bool IsDeleteModalOpen { get; set; }
+
+
+    private StudentTable.StudentRow? StudentToDelete { get; set; }
+
+
+    // =========================================
+    // FILTER
+    // =========================================
+
+    private bool IsFilterOpen { get; set; }
+
+
+    private string SearchText { get; set; } =
+        string.Empty;
+
+
+    private string SelectedBranch { get; set; } =
+        "all";
+
+
+    private string SelectedClass { get; set; } =
+        "all";
+
+
+    private string SelectedStatus { get; set; } =
+        "all";
+
+
+    // =========================================
+    // FILTERED STUDENTS
+    // =========================================
+
+    private List<StudentTable.StudentRow> FilteredStudents
+    {
+        get
+        {
+            IEnumerable<StudentTable.StudentRow> students =
+                StudentState.Students;
+
+
+            // ---------------------------------
+            // ROLE BASED ACCESS
+            // ---------------------------------
+
+            if (RoleState.CurrentRole == "branch-01")
+            {
+                students = students.Where(
+                    student =>
+                        student.Branch == "Branch 01");
+            }
+
+            else if (RoleState.CurrentRole == "branch-02")
+            {
+                students = students.Where(
+                    student =>
+                        student.Branch == "Branch 02");
+            }
+
+
+            // ---------------------------------
+            // HEAD OFFICE BRANCH FILTER
+            // ---------------------------------
+
+            if (RoleState.CurrentRole == "head-office"
+                &&
+                SelectedBranch != "all")
+            {
+                students = students.Where(
+                    student =>
+                        student.Branch == SelectedBranch);
+            }
+
+
+            // ---------------------------------
+            // CLASS FILTER
+            // ---------------------------------
+
+            if (SelectedClass != "all")
+            {
+                students = students.Where(
+                    student =>
+                        student.Class == SelectedClass);
+            }
+
+
+            // ---------------------------------
+            // STATUS FILTER
+            // ---------------------------------
+
+            if (SelectedStatus == "active")
+            {
+                students = students.Where(
+                    student =>
+                        student.IsActive);
+            }
+
+            else if (SelectedStatus == "inactive")
+            {
+                students = students.Where(
+                    student =>
+                        !student.IsActive);
+            }
+
+
+            // ---------------------------------
+            // SEARCH
+            // ---------------------------------
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                students = students.Where(student =>
+
+                    student.Name.Contains(
+                        SearchText,
+                        StringComparison.OrdinalIgnoreCase)
+
+                    ||
+
+                    student.Guardian.Contains(
+                        SearchText,
+                        StringComparison.OrdinalIgnoreCase)
+
+                    ||
+
+                    student.Phone.Contains(
+                        SearchText,
+                        StringComparison.OrdinalIgnoreCase)
+
+                    ||
+
+                    student.Class.Contains(
+                        SearchText,
+                        StringComparison.OrdinalIgnoreCase)
+
+                    ||
+
+                    student.Branch.Contains(
+                        SearchText,
+                        StringComparison.OrdinalIgnoreCase)
+                );
+            }
+
+
+            return students.ToList();
+        }
+    }
+
+
+    // =========================================
+    // COMPONENT INITIALIZATION
+    // =========================================
+
+    protected override void OnInitialized()
+    {
+        RoleState.OnChange += HandleRoleStateChanged;
+
+        StudentState.OnChange += HandleStudentStateChanged;
+    }
+
+
+    // =========================================
+    // ROLE STATE CHANGED
+    // =========================================
+
+    private void HandleRoleStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+
+    // =========================================
+    // STUDENT STATE CHANGED
+    // =========================================
+
+    private void HandleStudentStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+
+    // =========================================
+    // ADD STUDENT
+    // =========================================
+
+    private void OpenAddStudent()
+    {
+        EditingStudent = null;
+
+        IsStudentModalOpen = true;
+    }
+
+
+    // =========================================
+    // EDIT STUDENT
+    // =========================================
+
+    private void EditStudent(
+        StudentTable.StudentRow student)
+    {
+        EditingStudent = student;
+
+        IsStudentModalOpen = true;
+    }
+
+
+    // =========================================
+    // STUDENT ADDED
+    // =========================================
+
+    private void HandleStudentAdded(
+        StudentTable.StudentRow student)
+    {
+        StudentState.AddStudent(student);
+
+        IsStudentModalOpen = false;
+
+        EditingStudent = null;
+    }
+
+
+    // =========================================
+    // STUDENT EDITED
+    // =========================================
+
+    private void HandleStudentEdited(
+        StudentTable.StudentRow updatedStudent)
+    {
+        if (EditingStudent is null)
+            return;
+
+
+        StudentState.UpdateStudent(
+            EditingStudent,
+            updatedStudent);
+
+
+        IsStudentModalOpen = false;
+
+        EditingStudent = null;
+    }
+
+
+    // =========================================
+    // CLOSE ADD / EDIT MODAL
+    // =========================================
+
+    private void CloseStudentModal()
+    {
+        IsStudentModalOpen = false;
+
+        EditingStudent = null;
+    }
+
+
+    // =========================================
+    // VIEW STUDENT
+    // =========================================
+
+    private void ViewStudent(
+        StudentTable.StudentRow student)
+    {
+        SelectedStudent = student;
+
+        IsStudentDetailsOpen = true;
+    }
+
+
+    // =========================================
+    // CLOSE DETAILS
+    // =========================================
+
+    private void CloseStudentDetails()
+    {
+        IsStudentDetailsOpen = false;
+
+        SelectedStudent = null;
+    }
+
+
+    // =========================================
+    // DELETE CLICK
+    // =========================================
+
+    private void DeleteStudent(
+        StudentTable.StudentRow student)
+    {
+        StudentToDelete = student;
+
+        IsDeleteModalOpen = true;
+    }
+
+
+    // =========================================
+    // CONFIRM DELETE
+    // =========================================
+
+    private void HandleDeleteConfirmed(
+        StudentTable.StudentRow student)
+    {
+        StudentState.RemoveStudent(student);
+
+        IsDeleteModalOpen = false;
+
+        StudentToDelete = null;
+    }
+
+
+    // =========================================
+    // CLOSE DELETE MODAL
+    // =========================================
+
+    private void CloseDeleteModal()
+    {
+        IsDeleteModalOpen = false;
+
+        StudentToDelete = null;
+    }
+
+
+    // =========================================
+    // FILTER
+    // =========================================
+
+    private void ToggleFilter()
+    {
+        IsFilterOpen =
+            !IsFilterOpen;
+    }
+
+
+    private void CloseFilter()
+    {
+        IsFilterOpen = false;
+    }
+
+
+    private void ApplyFilters()
+    {
+        IsFilterOpen = false;
+    }
+
+
+    private void ClearFilters()
+    {
+        SelectedBranch = "all";
+
+        SelectedClass = "all";
+
+        SelectedStatus = "all";
+
+        SearchText = string.Empty;
+    }
+
+
+    // =========================================
+    // EXPORT
+    // =========================================
+
+    private void ExportStudents()
+    {
+        // Excel / PDF export will be connected later.
+    }
+
+
+    // =========================================
+    // DISPOSE
+    // =========================================
+
+    public void Dispose()
+    {
+        RoleState.OnChange -= HandleRoleStateChanged;
+
+        StudentState.OnChange -= HandleStudentStateChanged;
+    }
+
+}

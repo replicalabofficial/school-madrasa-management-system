@@ -1,0 +1,344 @@
+﻿@rendermode InteractiveServer
+
+<div class="income-breakdown">
+
+    <!-- HEADER -->
+
+    <div class="income-breakdown-header">
+        <h2>Income Breakdown</h2>
+    </div>
+
+
+    <!-- BODY -->
+
+    <div class="income-breakdown-body">
+
+        <!-- DONUT CHART -->
+
+        <div class="income-donut-wrapper">
+
+            <svg class="income-donut-svg"
+                 viewBox="0 0 240 240"
+                 aria-label="Income breakdown donut chart">
+
+                <!-- Background -->
+
+                <circle class="donut-background"
+                        cx="120"
+                        cy="120"
+                        r="82" />
+
+
+                <!-- Fees -->
+
+                <circle class="donut-segment fees-segment @(SelectedIncome == 0 ? "donut-selected" : "")"
+                        cx="120"
+                        cy="120"
+                        r="82"
+                        pathLength="100"
+                        stroke-dasharray="@GetDashArray(0)"
+                        stroke-dashoffset="0"
+                        @onmouseenter="() => SelectIncome(0)" />
+
+
+                <!-- Donations -->
+
+                <circle class="donut-segment donations-segment @(SelectedIncome == 1 ? "donut-selected" : "")"
+                        cx="120"
+                        cy="120"
+                        r="82"
+                        pathLength="100"
+                        stroke-dasharray="@GetDashArray(1)"
+                        stroke-dashoffset="@GetDashOffset(1)"
+                        @onmouseenter="() => SelectIncome(1)" />
+
+
+                <!-- Events -->
+
+                <circle class="donut-segment events-segment @(SelectedIncome == 2 ? "donut-selected" : "")"
+                        cx="120"
+                        cy="120"
+                        r="82"
+                        pathLength="100"
+                        stroke-dasharray="@GetDashArray(2)"
+                        stroke-dashoffset="@GetDashOffset(2)"
+                        @onmouseenter="() => SelectIncome(2)" />
+
+
+                <!-- Misc -->
+
+                <circle class="donut-segment misc-segment @(SelectedIncome == 3 ? "donut-selected" : "")"
+                        cx="120"
+                        cy="120"
+                        r="82"
+                        pathLength="100"
+                        stroke-dasharray="@GetDashArray(3)"
+                        stroke-dashoffset="@GetDashOffset(3)"
+                        @onmouseenter="() => SelectIncome(3)" />
+
+
+                <!-- Center -->
+
+                <circle class="donut-center-circle"
+                        cx="120"
+                        cy="120"
+                        r="58" />
+
+            </svg>
+
+
+            <!-- CENTER VALUE -->
+
+            <div class="donut-center">
+
+                <span class="donut-center-value">
+                    @FormatShortAmount(CurrentIncome.Amount)
+                </span>
+
+            </div>
+
+
+            <!-- DYNAMIC TOOLTIP -->
+
+            <div class="donut-tooltip">
+
+                <div class="donut-tooltip-name">
+
+                    <span class="tooltip-color"
+                          style="background:@CurrentIncome.Color">
+                    </span>
+
+                    @CurrentIncome.Name
+
+                </div>
+
+                <div class="donut-tooltip-value">
+
+                    Rs. @CurrentIncome.Amount.ToString("N0")
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INCOME LIST -->
+
+        <div class="income-list">
+
+            @for (int i = 0; i < IncomeData.Count; i++)
+            {
+                var index = i;
+                var item = IncomeData[index];
+
+                <div class="income-item @(SelectedIncome == index ? "income-item-active" : "")"
+                     @onmouseenter="() => SelectIncome(index)">
+
+                    <div class="income-item-left">
+
+                        <span class="income-dot"
+                              style="background:@item.Color">
+                        </span>
+
+                        <span class="income-name">
+                            @item.Name
+                        </span>
+
+                    </div>
+
+                    <span class="income-value">
+                        @FormatShortAmount(item.Amount)
+                    </span>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string UserType { get; set; } = "head-office";
+
+
+    private int SelectedIncome { get; set; } = 0;
+
+
+    /*
+     * Temporary frontend demo data.
+     *
+     * Head Office
+     * = Combined data
+     *
+     * Branch 01
+     * = Branch 01 data only
+     *
+     * Branch 02
+     * = Branch 02 data only
+     */
+
+    private List<IncomeItem> IncomeData => UserType switch
+    {
+        "branch-01" => new List<IncomeItem>
+        {
+            new()
+            {
+                Name = "Fees",
+                Amount = 6500,
+                Color = "#4f46e5"
+            },
+            new()
+            {
+                Name = "Donations",
+                Amount = 90000,
+                Color = "#10b981"
+            },
+            new()
+            {
+                Name = "Events",
+                Amount = 35000,
+                Color = "#f59e0b"
+            },
+            new()
+            {
+                Name = "Misc",
+                Amount = 26500,
+                Color = "#6b7280"
+            }
+        },
+
+        "branch-02" => new List<IncomeItem>
+        {
+            new()
+            {
+                Name = "Fees",
+                Amount = 10000,
+                Color = "#4f46e5"
+            },
+            new()
+            {
+                Name = "Donations",
+                Amount = 120000,
+                Color = "#10b981"
+            },
+            new()
+            {
+                Name = "Events",
+                Amount = 35000,
+                Color = "#f59e0b"
+            },
+            new()
+            {
+                Name = "Misc",
+                Amount = 22000,
+                Color = "#6b7280"
+            }
+        },
+
+        _ => new List<IncomeItem>
+        {
+            new()
+            {
+                Name = "Fees",
+                Amount = 302000,
+                Color = "#4f46e5"
+            },
+            new()
+            {
+                Name = "Donations",
+                Amount = 200000,
+                Color = "#10b981"
+            },
+            new()
+            {
+                Name = "Events",
+                Amount = 35000,
+                Color = "#f59e0b"
+            },
+            new()
+            {
+                Name = "Misc",
+                Amount = 8000,
+                Color = "#6b7280"
+            }
+        }
+    };
+
+
+    private IncomeItem CurrentIncome =>
+        IncomeData[Math.Clamp(
+            SelectedIncome,
+            0,
+            IncomeData.Count - 1
+        )];
+
+
+    private decimal TotalIncome =>
+        IncomeData.Sum(x => x.Amount);
+
+
+    private string GetDashArray(int index)
+    {
+        if (TotalIncome <= 0)
+            return "0 100";
+
+        decimal percentage =
+            IncomeData[index].Amount / TotalIncome * 100;
+
+        return $"{percentage:F1} {100 - percentage:F1}";
+    }
+
+
+    private string GetDashOffset(int index)
+    {
+        decimal offset = 0;
+
+        for (int i = 0; i < index; i++)
+        {
+            if (TotalIncome > 0)
+            {
+                offset +=
+                    IncomeData[i].Amount / TotalIncome * 100;
+            }
+        }
+
+        return $"-{offset:F1}";
+    }
+
+
+    private string FormatShortAmount(decimal amount)
+    {
+        if (amount >= 1_000_000)
+            return $"Rs. {(amount / 1_000_000):0.#}M";
+
+        if (amount >= 1_000)
+            return $"Rs. {(amount / 1_000):0.#}K";
+
+        return $"Rs. {amount:N0}";
+    }
+
+
+    private void SelectIncome(int index)
+    {
+        if (index >= 0 && index < IncomeData.Count)
+        {
+            SelectedIncome = index;
+        }
+    }
+
+
+    private class IncomeItem
+    {
+        public string Name { get; set; } = string.Empty;
+
+        public decimal Amount { get; set; }
+
+        public string Color { get; set; } = string.Empty;
+    }
+}

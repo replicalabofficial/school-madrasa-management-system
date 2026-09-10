@@ -1,0 +1,553 @@
+﻿@if (IsOpen)
+{
+    <div class="student-modal-overlay"
+         @onclick="HandleOverlayClick">
+
+        <div class="student-modal"
+             @onclick:stopPropagation="true">
+
+            <!-- HEADER -->
+            <div class="student-modal-header">
+
+                <div>
+                    <h2>
+                        @(IsEditMode ? "Edit Student" : "Add Student")
+                    </h2>
+
+                    <p>
+                        @(IsEditMode
+                            ? "Update student information."
+                            : "Add a new student to the system.")
+                    </p>
+                </div>
+
+                <button type="button"
+                        class="student-modal-close"
+                        @onclick="CloseModal">
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- FORM -->
+            <div class="student-modal-body">
+
+                <!-- STUDENT NAME -->
+                <div class="student-form-group">
+
+                    <label for="student-name">
+                        Student Name
+                    </label>
+
+                    <input id="student-name"
+                           type="text"
+                           placeholder="Enter student name"
+                           @bind="StudentName" />
+
+                </div>
+
+
+                <!-- GUARDIAN -->
+                <div class="student-form-group">
+
+                    <label for="student-guardian">
+                        Guardian Name
+                    </label>
+
+                    <input id="student-guardian"
+                           type="text"
+                           placeholder="Enter guardian name"
+                           @bind="Guardian" />
+
+                </div>
+
+
+                <!-- PHONE -->
+                <div class="student-form-group">
+
+                    <label for="student-phone">
+                        Phone
+                    </label>
+
+                    <input id="student-phone"
+                           type="text"
+                           placeholder="03XX-XXXXXXX"
+                           @bind="Phone" />
+
+                </div>
+
+
+                <!-- CLASS -->
+                <div class="student-form-group">
+
+                    <label for="student-class">
+                        Class
+                    </label>
+
+                    <select id="student-class"
+                            @bind="StudentClass">
+
+                        <option value="">
+                            Select class
+                        </option>
+
+                        <option value="Grade 1">
+                            Grade 1
+                        </option>
+
+                        <option value="Grade 2">
+                            Grade 2
+                        </option>
+
+                        <option value="Grade 3">
+                            Grade 3
+                        </option>
+
+                        <option value="Grade 4">
+                            Grade 4
+                        </option>
+
+                        <option value="Grade 5">
+                            Grade 5
+                        </option>
+
+                        <option value="Grade 6">
+                            Grade 6
+                        </option>
+
+                        <option value="Grade 7">
+                            Grade 7
+                        </option>
+
+                        <option value="Grade 8">
+                            Grade 8
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BRANCH -->
+                <div class="student-form-group">
+
+                    <label for="student-branch">
+                        Branch
+                    </label>
+
+                    @if (IsBranchUser)
+                    {
+                        <select id="student-branch"
+                                value="@UserBranch"
+                                disabled>
+
+                            <option value="@UserBranch">
+                                @UserBranch
+                            </option>
+
+                        </select>
+                    }
+                    else
+                    {
+                        <select id="student-branch"
+                                @bind="Branch">
+
+                            <option value="">
+                                Select branch
+                            </option>
+
+                            <option value="Branch 01">
+                                Branch 01
+                            </option>
+
+                            <option value="Branch 02">
+                                Branch 02
+                            </option>
+
+                        </select>
+                    }
+
+                </div>
+
+
+                <!-- MONTHLY FEE -->
+                <div class="student-form-group">
+
+                    <label for="student-fee">
+                        Monthly Fee
+                    </label>
+
+                    <input id="student-fee"
+                           type="text"
+                           placeholder="Rs. 3,500"
+                           @bind="MonthlyFee" />
+
+                </div>
+
+
+                <!-- ADMISSION DATE -->
+                <div class="student-form-group">
+
+                    <label for="student-admission-date">
+                        Admission Date
+                    </label>
+
+                    <input id="student-admission-date"
+                           type="date"
+                           @bind="AdmissionDate" />
+
+                </div>
+
+
+                <!-- STATUS -->
+                <div class="student-form-group">
+
+                    <label for="student-status">
+                        Status
+                    </label>
+
+                    <select id="student-status"
+                            @bind="Status">
+
+                        <option value="active">
+                            Active
+                        </option>
+
+                        <option value="inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+            <div class="student-modal-footer">
+
+                <button type="button"
+                        class="student-modal-cancel"
+                        @onclick="CloseModal">
+
+                    Cancel
+
+                </button>
+
+
+                <button type="button"
+                        class="student-modal-save"
+                        @onclick="SaveStudent">
+
+                    @(IsEditMode
+                        ? "Save Changes"
+                        : "Add Student")
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+@code {
+
+    // =========================================
+    // PARAMETERS
+    // =========================================
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+
+    [Parameter]
+    public EventCallback<StudentTable.StudentRow> OnStudentAdded { get; set; }
+
+
+    [Parameter]
+    public EventCallback<StudentTable.StudentRow> OnStudentEdited { get; set; }
+
+
+    [Parameter]
+    public StudentTable.StudentRow? EditingStudent { get; set; }
+
+
+    [Parameter]
+    public string UserType { get; set; } = "head-office";
+
+
+    // =========================================
+    // FORM FIELDS
+    // =========================================
+
+    private string StudentName { get; set; } = string.Empty;
+
+    private string Guardian { get; set; } = string.Empty;
+
+    private string Phone { get; set; } = string.Empty;
+
+    private string StudentClass { get; set; } = string.Empty;
+
+    private string Branch { get; set; } = string.Empty;
+
+    private string MonthlyFee { get; set; } = string.Empty;
+
+
+    // DateTime internally
+    private DateTime AdmissionDate { get; set; } =
+        DateTime.Today;
+
+
+    // IMPORTANT:
+    // Status is handled as STRING in the UI.
+    private string Status { get; set; } = "active";
+
+
+    // =========================================
+    // EDIT MODE
+    // =========================================
+
+    private bool IsEditMode =>
+        EditingStudent is not null;
+
+
+    // =========================================
+    // BRANCH USER
+    // =========================================
+
+    private bool IsBranchUser =>
+        UserType == "branch-01"
+        ||
+        UserType == "branch-02";
+
+
+    private string UserBranch =>
+        UserType switch
+        {
+            "branch-01" => "Branch 01",
+
+            "branch-02" => "Branch 02",
+
+            _ => string.Empty
+        };
+
+
+    // =========================================
+    // LOAD FORM
+    // =========================================
+
+    protected override void OnParametersSet()
+    {
+        if (!IsOpen)
+            return;
+
+
+        // =====================================
+        // EDIT
+        // =====================================
+
+        if (EditingStudent is not null)
+        {
+            StudentName =
+                EditingStudent.Name;
+
+            Guardian =
+                EditingStudent.Guardian;
+
+            Phone =
+                EditingStudent.Phone;
+
+            StudentClass =
+                EditingStudent.Class;
+
+            Branch =
+                EditingStudent.Branch;
+
+            MonthlyFee =
+                EditingStudent.MonthlyFee;
+
+
+            // DATE
+            if (DateTime.TryParse(
+                    EditingStudent.AdmissionDate,
+                    out var parsedDate))
+            {
+                AdmissionDate = parsedDate;
+            }
+            else
+            {
+                AdmissionDate = DateTime.Today;
+            }
+
+
+            // STATUS
+            Status =
+                EditingStudent.IsActive
+                    ? "active"
+                    : "inactive";
+        }
+
+
+        // =====================================
+        // ADD
+        // =====================================
+
+        else
+        {
+            ResetForm();
+
+            if (IsBranchUser)
+            {
+                Branch = UserBranch;
+            }
+        }
+    }
+
+
+    // =========================================
+    // SAVE
+    // =========================================
+
+    private async Task SaveStudent()
+    {
+        // -------------------------------------
+        // FORCE BRANCH FOR BRANCH USER
+        // -------------------------------------
+
+        if (IsBranchUser)
+        {
+            Branch = UserBranch;
+        }
+
+
+        // -------------------------------------
+        // CONVERT STATUS STRING → BOOL
+        // -------------------------------------
+
+        bool isActive =
+            Status == "active";
+
+
+        // -------------------------------------
+        // CREATE STUDENT
+        // -------------------------------------
+
+        var student =
+            new StudentTable.StudentRow
+            {
+                Name =
+                    StudentName.Trim(),
+
+                Guardian =
+                    Guardian.Trim(),
+
+                Phone =
+                    Phone.Trim(),
+
+                Class =
+                    StudentClass,
+
+                Branch =
+                    Branch,
+
+                MonthlyFee =
+                    MonthlyFee.Trim(),
+
+                AdmissionDate =
+                    AdmissionDate.ToString("yyyy-MM-dd"),
+
+                IsActive =
+                    isActive
+            };
+
+
+        // -------------------------------------
+        // EDIT
+        // -------------------------------------
+
+        if (IsEditMode)
+        {
+            await OnStudentEdited
+                .InvokeAsync(student);
+        }
+
+        // -------------------------------------
+        // ADD
+        // -------------------------------------
+
+        else
+        {
+            await OnStudentAdded
+                .InvokeAsync(student);
+        }
+
+
+        // -------------------------------------
+        // CLOSE
+        // -------------------------------------
+
+        await OnClose.InvokeAsync();
+    }
+
+
+    // =========================================
+    // RESET FORM
+    // =========================================
+
+    private void ResetForm()
+    {
+        StudentName =
+            string.Empty;
+
+        Guardian =
+            string.Empty;
+
+        Phone =
+            string.Empty;
+
+        StudentClass =
+            string.Empty;
+
+        Branch =
+            string.Empty;
+
+        MonthlyFee =
+            string.Empty;
+
+        AdmissionDate =
+            DateTime.Today;
+
+        Status =
+            "active";
+    }
+
+
+    // =========================================
+    // CLOSE
+    // =========================================
+
+    private async Task CloseModal()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+
+    // =========================================
+    // OVERLAY CLICK
+    // =========================================
+
+    private async Task HandleOverlayClick()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+}

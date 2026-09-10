@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+
+<div class="app-layout">
+
+    <input type="checkbox"
+           id="sidebar-toggle"
+           class="sidebar-toggle-input" />
+
+    <aside class="app-sidebar">
+        <Sidebar />
+    </aside>
+
+    <div class="app-main">
+
+        <header class="app-topbar">
+            <Topbar />
+        </header>
+
+        <main class="app-content">
+            @Body
+        </main>
+
+    </div>
+
+</div>

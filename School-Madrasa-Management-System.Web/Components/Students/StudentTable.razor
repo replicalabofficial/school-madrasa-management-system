@@ -1,0 +1,227 @@
+﻿<div class="student-table-wrapper">
+
+    <table class="student-table">
+
+        <thead>
+            <tr>
+                <th>STUDENT NAME</th>
+                <th>GUARDIAN</th>
+                <th>PHONE</th>
+                <th>CLASS</th>
+                <th>BRANCH</th>
+                <th>MONTHLY FEE</th>
+                <th>ADMISSION</th>
+                <th>STATUS</th>
+                <th class="actions-header"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var student in Students)
+            {
+                <tr>
+
+                    <!-- Student Name -->
+                    <td>
+                        <div class="student-name">
+                            @student.Name
+                        </div>
+                    </td>
+
+                    <!-- Guardian -->
+                    <td>
+                        <span class="student-text">
+                            @student.Guardian
+                        </span>
+                    </td>
+
+                    <!-- Phone -->
+                    <td>
+                        <span class="student-phone">
+                            @student.Phone
+                        </span>
+                    </td>
+
+                    <!-- Class -->
+                    <td>
+                        <span class="student-text">
+                            @student.Class
+                        </span>
+                    </td>
+
+                    <!-- Branch -->
+                    <td>
+                        <span class="branch-badge">
+                            @student.Branch
+                        </span>
+                    </td>
+
+                    <!-- Monthly Fee -->
+                    <td>
+                        <span class="student-fee">
+                            @student.MonthlyFee
+                        </span>
+                    </td>
+
+                    <!-- Admission -->
+                    <td>
+                        <span class="student-text">
+                            @student.AdmissionDate
+                        </span>
+                    </td>
+
+                    <!-- Status -->
+                    <td>
+                        @if (student.IsActive)
+                        {
+                            <span class="status-badge status-active">
+                                <span class="status-icon">✓</span>
+                                Active
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="status-badge status-inactive">
+                                <span class="status-icon">◷</span>
+                                Inactive
+                            </span>
+                        }
+                    </td>
+
+                    <!-- Actions -->
+                    <td>
+                        <div class="student-actions">
+
+                            <!-- VIEW -->
+                            <button type="button"
+                                    class="student-action-button"
+                                    title="View Student"
+                                    @onclick="() => OnView.InvokeAsync(student)">
+
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+
+                                    <path d="M2.5 12s3.5-5 9.5-5 9.5 5 9.5 5-3.5 5-9.5 5-9.5-5-9.5-5z" />
+
+                                    <circle cx="12"
+                                            cy="12"
+                                            r="2.5" />
+
+                                </svg>
+
+                            </button>
+
+
+                            <!-- EDIT -->
+                            <button type="button"
+                                    class="student-action-button"
+                                    title="Edit Student"
+                                    @onclick="() => OnEdit.InvokeAsync(student)">
+
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+
+                                    <path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3z" />
+
+                                    <path d="M14.5 7.5l2 2" />
+
+                                </svg>
+
+                            </button>
+
+
+                            <!-- DELETE -->
+                            <button type="button"
+                                    class="student-action-button delete-action"
+                                    title="Delete Student"
+                                    @onclick="() => OnDelete.InvokeAsync(student)">
+
+                                <svg viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+
+                                    <path d="M4 7h16" />
+
+                                    <path d="M9 7V4h6v3" />
+
+                                    <path d="M7 7l1 13h8l1-13" />
+
+                                    <path d="M10 11v5" />
+
+                                    <path d="M14 11v5" />
+
+                                </svg>
+
+                            </button>
+
+                        </div>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+@code {
+
+    // =========================================
+    // PARAMETERS
+    // =========================================
+
+    [Parameter]
+    public List<StudentRow> Students { get; set; } = new();
+
+
+    [Parameter]
+    public EventCallback<StudentRow> OnView { get; set; }
+
+
+    [Parameter]
+    public EventCallback<StudentRow> OnEdit { get; set; }
+
+
+    [Parameter]
+    public EventCallback<StudentRow> OnDelete { get; set; }
+
+
+    // =========================================
+    // STUDENT ROW
+    // =========================================
+
+    public class StudentRow
+    {
+        public string Name { get; set; } = "—";
+
+        public string Guardian { get; set; } = "—";
+
+        public string Phone { get; set; } = "—";
+
+        public string Class { get; set; } = "—";
+
+        public string Branch { get; set; } = "—";
+
+        public string MonthlyFee { get; set; } = "—";
+
+        public string AdmissionDate { get; set; } = "—";
+
+        public bool IsActive { get; set; }
+    }
+
+}

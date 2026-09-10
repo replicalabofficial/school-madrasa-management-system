@@ -1,0 +1,71 @@
+﻿<div class="sidebar-role-switcher">
+
+    @* <div class="role-switcher-title">
+        Demo: Switch Role
+    </div> *@
+
+    <div class="role-list">
+
+        @foreach (var role in Roles)
+        {
+            <button type="button"
+                    class="role-item @(SelectedRole == role.Key ? "active" : "")"
+                    @onclick="() => SelectRole(role.Key)">
+
+                @role.Name
+
+            </button>
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string SelectedRole { get; set; } = "head-office";
+
+
+    [Parameter]
+    public EventCallback<string> SelectedRoleChanged { get; set; }
+
+
+    private readonly List<RoleOption> Roles = new()
+    {
+        new RoleOption
+        {
+            Key = "head-office",
+            Name = "Head Office Admin"
+        },
+
+        new RoleOption
+        {
+            Key = "branch-01",
+            Name = "Branch 01 User"
+        },
+
+        new RoleOption
+        {
+            Key = "branch-02",
+            Name = "Branch 02 User"
+        }
+    };
+
+
+    private async Task SelectRole(string role)
+    {
+        SelectedRole = role;
+
+        await SelectedRoleChanged.InvokeAsync(role);
+    }
+
+
+    private class RoleOption
+    {
+        public string Key { get; set; } = string.Empty;
+
+        public string Name { get; set; } = string.Empty;
+    }
+
+}

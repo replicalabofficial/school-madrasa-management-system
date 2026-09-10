@@ -1,0 +1,213 @@
+﻿.sidebar-navigation {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 6px 12px 20px 12px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #475569 transparent;
+}
+
+
+    /* =========================================
+   SCROLLBAR
+========================================= */
+
+    .sidebar-navigation::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sidebar-navigation::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar-navigation::-webkit-scrollbar-thumb {
+        background: #475569;
+        border-radius: 10px;
+    }
+
+        .sidebar-navigation::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+
+    /* =========================================
+   NAV ITEM
+========================================= */
+
+    .sidebar-navigation ::deep .sidebar-nav-item {
+        width: 100%;
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        margin: 2px 0;
+        box-sizing: border-box;
+        color: #94a3b8;
+        background: transparent;
+        border-radius: 12px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.2;
+        cursor: pointer;
+        transition: background-color 0.18s ease, color 0.18s ease;
+    }
+
+
+        /* =========================================
+   HOVER
+========================================= */
+
+        .sidebar-navigation ::deep .sidebar-nav-item:hover {
+            color: #e2e8f0;
+            background: #17233b;
+        }
+
+
+        /* =========================================
+   ACTIVE
+========================================= */
+
+        .sidebar-navigation ::deep .sidebar-nav-item.active {
+            color: #ffffff;
+            background: #4f39f6;
+            font-weight: 500;
+        }
+
+            .sidebar-navigation ::deep .sidebar-nav-item.active:hover {
+                color: #ffffff;
+                background: #4f39f6;
+            }
+
+
+    /* =========================================
+   ICON
+========================================= */
+
+    .sidebar-navigation ::deep .nav-icon {
+        width: 28px;
+        min-width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+        color: #94a3b8;
+        flex-shrink: 0;
+        transition: color 0.18s ease;
+    }
+
+
+        .sidebar-navigation ::deep .nav-icon svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+        }
+
+
+    /* =========================================
+   ACTIVE ICON
+========================================= */
+
+    .sidebar-navigation ::deep .sidebar-nav-item.active .nav-icon {
+        color: #ffffff;
+    }
+
+
+    /* =========================================
+   LABEL
+========================================= */
+
+    .sidebar-navigation ::deep .nav-label {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1024px) {
+
+    .sidebar-navigation {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+        .sidebar-navigation ::deep .sidebar-nav-item {
+            padding: 0 16px;
+            min-height: 56px;
+            font-size: 17px;
+        }
+
+        .sidebar-navigation ::deep .nav-icon {
+            margin-right: 14px;
+        }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar-navigation {
+        padding: 6px 10px 18px 10px;
+    }
+
+        .sidebar-navigation ::deep .sidebar-nav-item {
+            min-height: 56px;
+            padding: 0 16px;
+            font-size: 17px;
+            border-radius: 11px;
+        }
+
+        .sidebar-navigation ::deep .nav-icon {
+            width: 27px;
+            min-width: 27px;
+            height: 27px;
+            margin-right: 14px;
+        }
+
+            .sidebar-navigation ::deep .nav-icon svg {
+                width: 21px;
+                height: 21px;
+            }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+
+    .sidebar-navigation {
+        padding: 6px 8px 16px 8px;
+    }
+
+        .sidebar-navigation ::deep .sidebar-nav-item {
+            min-height: 54px;
+            padding: 0 14px;
+            font-size: 16px;
+        }
+
+        .sidebar-navigation ::deep .nav-icon {
+            width: 26px;
+            min-width: 26px;
+            height: 26px;
+            margin-right: 13px;
+        }
+
+            .sidebar-navigation ::deep .nav-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+}

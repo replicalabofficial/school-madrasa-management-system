@@ -1,0 +1,169 @@
+﻿@page "/branches"
+@rendermode InteractiveServer
+
+<PageTitle>Branches - Al-Noor Management System</PageTitle>
+
+<div class="branches-page">
+
+    <!-- Page Header -->
+    <div class="branches-page-header">
+
+        <div class="branches-page-header-content">
+
+            <h1>Branch Management</h1>
+
+            <p>
+                Head Office · All Branches
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Branch Cards -->
+    <div class="branches-grid">
+
+        <BranchCard
+            BranchName="Branch 01"
+            Location="Main Campus"
+            EstablishedYear="2018"
+            Status="Active"
+            Students="4"
+            Staff="4"
+            ActiveCount="3"
+            FeeCollection="Rs. 6,500"
+            TotalIncome="Rs. 158,000"
+            TotalExpenses="Rs. 35,000"
+            OnDetailsClick="OpenBranch01Details" />
+
+        <BranchCard
+            BranchName="Branch 02"
+            Location="Main Campus"
+            EstablishedYear="2018"
+            Status="Active"
+            Students="4"
+            Staff="4"
+            ActiveCount="4"
+            FeeCollection="Rs. 10,000"
+            TotalIncome="Rs. 187,000"
+            TotalExpenses="Rs. 37,000"
+            OnDetailsClick="OpenBranch02Details" />
+
+    </div>
+
+
+    <!-- Branch Details Modal -->
+
+    <BranchDetailsModal
+        IsOpen="@IsDetailsModalOpen"
+        IsOpenChanged="HandleModalStateChanged"
+        BranchName="@SelectedBranchName"
+        Location="@SelectedBranchLocation"
+        EstablishedYear="@SelectedBranchEstablishedYear"
+        Status="@SelectedBranchStatus"
+        TotalStudents="@SelectedBranchStudents"
+        TeachersStaff="@SelectedBranchStaff"
+        ActiveStudents="@SelectedBranchActiveStudents"
+        FeesCollected="@SelectedBranchFeesCollected"
+        PendingFees="@SelectedBranchPendingFees"
+        TotalIncome="@SelectedBranchIncome"
+        TotalExpenses="@SelectedBranchExpenses"
+        TotalSalaries="@SelectedBranchSalaries"
+        NetBalance="@SelectedBranchNetBalance" />
+
+</div>
+
+
+@code {
+
+    // =========================
+    // Modal State
+    // =========================
+
+    private bool IsDetailsModalOpen;
+
+
+    // =========================
+    // Selected Branch
+    // =========================
+
+    private string SelectedBranchName = string.Empty;
+    private string SelectedBranchLocation = string.Empty;
+    private int SelectedBranchEstablishedYear;
+    private string SelectedBranchStatus = string.Empty;
+
+    private string SelectedBranchStudents = "—";
+    private string SelectedBranchStaff = "—";
+    private string SelectedBranchActiveStudents = "—";
+
+    private string SelectedBranchFeesCollected = "—";
+    private string SelectedBranchPendingFees = "—";
+    private string SelectedBranchIncome = "—";
+    private string SelectedBranchExpenses = "—";
+    private string SelectedBranchSalaries = "—";
+    private string SelectedBranchNetBalance = "—";
+
+
+    // =========================
+    // Branch 01
+    // =========================
+
+    private void OpenBranch01Details()
+    {
+        SelectedBranchName = "Branch 01";
+        SelectedBranchLocation = "Main Campus";
+        SelectedBranchEstablishedYear = 2018;
+        SelectedBranchStatus = "Active";
+
+        SelectedBranchStudents = "4";
+        SelectedBranchStaff = "4";
+        SelectedBranchActiveStudents = "3";
+
+        SelectedBranchFeesCollected = "Rs. 6,500";
+        SelectedBranchPendingFees = "—";
+        SelectedBranchIncome = "Rs. 158,000";
+        SelectedBranchExpenses = "Rs. 35,000";
+        SelectedBranchSalaries = "—";
+        SelectedBranchNetBalance = "—";
+
+        IsDetailsModalOpen = true;
+    }
+
+
+    // =========================
+    // Branch 02
+    // =========================
+
+    private void OpenBranch02Details()
+    {
+        SelectedBranchName = "Branch 02";
+        SelectedBranchLocation = "Main Campus";
+        SelectedBranchEstablishedYear = 2018;
+        SelectedBranchStatus = "Active";
+
+        SelectedBranchStudents = "4";
+        SelectedBranchStaff = "4";
+        SelectedBranchActiveStudents = "4";
+
+        SelectedBranchFeesCollected = "Rs. 10,000";
+        SelectedBranchPendingFees = "—";
+        SelectedBranchIncome = "Rs. 187,000";
+        SelectedBranchExpenses = "Rs. 37,000";
+        SelectedBranchSalaries = "—";
+        SelectedBranchNetBalance = "—";
+
+        IsDetailsModalOpen = true;
+    }
+
+
+    // =========================
+    // Modal
+    // =========================
+
+    private void HandleModalStateChanged(bool isOpen)
+    {
+        IsDetailsModalOpen = isOpen;
+    }
+
+}

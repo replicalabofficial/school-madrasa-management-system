@@ -1,0 +1,266 @@
+﻿@if (IsOpen && Student is not null)
+{
+    <div class="student-details-overlay"
+         @onclick="CloseModal">
+
+        <div class="student-details-modal"
+             @onclick:stopPropagation="true">
+
+            <!-- =========================================
+                 HEADER
+                 ========================================= -->
+
+            <div class="student-details-header">
+
+                <div>
+                    <h2>Student Details</h2>
+
+                    <p>
+                        Complete student information
+                    </p>
+                </div>
+
+                <button type="button"
+                        class="student-details-close"
+                        @onclick="CloseModal"
+                        aria-label="Close">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+
+                        <path d="M6 6l12 12" />
+                        <path d="M18 6L6 18" />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <!-- =========================================
+                 STUDENT PROFILE
+                 ========================================= -->
+
+            <div class="student-details-profile">
+
+                <div class="student-avatar">
+                    @GetInitials(Student.Name)
+                </div>
+
+                <div class="student-profile-info">
+
+                    <h3>
+                        @Student.Name
+                    </h3>
+
+                    <span class="student-profile-branch">
+                        @Student.Branch
+                    </span>
+
+                </div>
+
+                <span class="student-profile-status @(Student.IsActive ? "active" : "inactive")">
+
+                    @(Student.IsActive ? "Active" : "Inactive")
+
+                </span>
+
+            </div>
+
+
+            <!-- =========================================
+                 INFORMATION
+                 ========================================= -->
+
+            <div class="student-details-body">
+
+                <div class="student-details-section">
+
+                    <h3>Personal Information</h3>
+
+
+                    <div class="student-details-grid">
+
+                        <div class="student-detail-item">
+
+                            <span class="detail-label">
+                                Full Name
+                            </span>
+
+                            <strong>
+                                @Student.Name
+                            </strong>
+
+                        </div>
+
+
+                        <div class="student-detail-item">
+
+                            <span class="detail-label">
+                                Guardian Name
+                            </span>
+
+                            <strong>
+                                @Student.Guardian
+                            </strong>
+
+                        </div>
+
+
+                        <div class="student-detail-item">
+
+                            <span class="detail-label">
+                                Phone Number
+                            </span>
+
+                            <strong>
+                                @Student.Phone
+                            </strong>
+
+                        </div>
+
+
+                        <div class="student-detail-item">
+
+                            <span class="detail-label">
+                                Class / Grade
+                            </span>
+
+                            <strong>
+                                @Student.Class
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="student-details-section">
+
+                    <h3>Academic & Financial Information</h3>
+
+
+                    <div class="student-details-grid">
+
+                        <div class="student-detail-item">
+
+                            <span class="detail-label">
+                                Branch
+                            </span>
+
+                            <strong>
+                                @Student.Branch
+                            </strong>
+
+                        </div>
+
+
+                        <div class="student-detail-item">
+
+                            <span class="detail-label">
+                                Monthly Fee
+                            </span>
+
+                            <strong>
+                                @Student.MonthlyFee
+                            </strong>
+
+                        </div>
+
+
+                        <div class="student-detail-item">
+
+                            <span class="detail-label">
+                                Admission Date
+                            </span>
+
+                            <strong>
+                                @Student.AdmissionDate
+                            </strong>
+
+                        </div>
+
+
+                        <div class="student-detail-item">
+
+                            <span class="detail-label">
+                                Status
+                            </span>
+
+                            <strong>
+                                @(Student.IsActive ? "Active" : "Inactive")
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 FOOTER
+                 ========================================= -->
+
+            <div class="student-details-footer">
+
+                <button type="button"
+                        class="student-details-close-button"
+                        @onclick="CloseModal">
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+@code {
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+
+    [Parameter]
+    public StudentTable.StudentRow? Student { get; set; }
+
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+
+    private async Task CloseModal()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "—";
+
+        var parts = name
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 1)
+            return parts[0][0].ToString().ToUpper();
+
+        return $"{parts[0][0]}{parts[^1][0]}".ToUpper();
+    }
+
+}

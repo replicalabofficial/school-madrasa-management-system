@@ -1,0 +1,414 @@
+﻿.topbar {
+    width: 100%;
+    height: 102px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px 0 42px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LEFT SECTION
+   ========================================================= */
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   MENU BUTTON
+   ========================================================= */
+
+.topbar-menu-button {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.2s ease, transform 0.15s ease;
+}
+
+    .topbar-menu-button svg {
+        width: 26px;
+        height: 26px;
+        display: block;
+    }
+
+    .topbar-menu-button:hover {
+        color: #475569;
+    }
+
+    .topbar-menu-button:active {
+        transform: scale(0.94);
+    }
+
+    .topbar-menu-button:focus-visible {
+        outline: 2px solid #7184ff;
+        outline-offset: 4px;
+    }
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.topbar-search {
+    width: 385px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    background: #ffffff;
+    border: 1px solid #dce1e8;
+    border-radius: 12px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .topbar-search:focus-within {
+        border-color: #8b82ff;
+        box-shadow: 0 0 0 3px rgba(81, 56, 245, 0.08);
+    }
+
+
+.search-icon {
+    width: 23px;
+    height: 23px;
+    flex-shrink: 0;
+    color: #94a3b8;
+}
+
+
+.topbar-search input {
+    width: 100%;
+    margin-left: 16px;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #334155;
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+    .topbar-search input::placeholder {
+        color: #8b8f96;
+        opacity: 1;
+    }
+
+
+/* =========================================================
+   RIGHT SECTION
+   ========================================================= */
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+   ========================================================= */
+
+.topbar-notification {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+    .topbar-notification svg {
+        width: 27px;
+        height: 27px;
+        display: block;
+    }
+
+    .topbar-notification:hover {
+        color: #475569;
+        background: #f8fafc;
+    }
+
+    .topbar-notification:focus-visible {
+        outline: 2px solid #7184ff;
+        outline-offset: 2px;
+    }
+
+
+/* Notification Red Dot */
+
+.notification-dot {
+    position: absolute;
+    top: 4px;
+    right: 3px;
+    width: 11px;
+    height: 11px;
+    background: #ff3347;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   USER PROFILE
+   ========================================================= */
+
+.topbar-user-profile {
+    min-width: 190px;
+    display: flex;
+    align-items: center;
+    padding: 4px 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 10px;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+}
+
+    .topbar-user-profile:hover {
+        background: #f8fafc;
+    }
+
+    .topbar-user-profile:focus-visible {
+        outline: 2px solid #7184ff;
+        outline-offset: 4px;
+    }
+
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #5138f5;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+
+/* =========================================================
+   USER DETAILS
+   ========================================================= */
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    margin-left: 14px;
+    min-width: 0;
+}
+
+.user-name {
+    color: #273449;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+.user-role {
+    margin-top: 2px;
+    color: #9aa4b5;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CHEVRON
+   ========================================================= */
+
+.user-chevron {
+    width: 18px;
+    height: 18px;
+    margin-left: auto;
+    margin-right: 2px;
+    color: #94a3b8;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.topbar-user-profile:hover .user-chevron {
+    color: #475569;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .topbar {
+        padding-left: 28px;
+        padding-right: 20px;
+    }
+
+    .topbar-left {
+        gap: 24px;
+    }
+
+    .topbar-search {
+        width: 320px;
+    }
+
+        .topbar-search input {
+            font-size: 18px;
+        }
+
+    .topbar-right {
+        gap: 18px;
+    }
+}
+
+
+@media (max-width: 992px) {
+
+    .topbar {
+        height: 88px;
+        padding-left: 22px;
+        padding-right: 18px;
+    }
+
+    .topbar-search {
+        width: 280px;
+        height: 50px;
+    }
+
+    .topbar-user-profile {
+        min-width: 165px;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .user-name {
+        font-size: 17px;
+    }
+
+    .user-role {
+        font-size: 15px;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .topbar {
+        height: 76px;
+        padding: 0 16px;
+    }
+
+    .topbar-left {
+        gap: 16px;
+    }
+
+    .topbar-search {
+        width: 220px;
+        height: 46px;
+    }
+
+        .topbar-search input {
+            font-size: 16px;
+        }
+
+    .topbar-right {
+        gap: 10px;
+    }
+
+    .topbar-user-profile {
+        min-width: auto;
+    }
+
+    .user-details {
+        display: none;
+    }
+
+    .user-chevron {
+        margin-left: 8px;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    .topbar {
+        height: 68px;
+        padding: 0 12px;
+    }
+
+    .topbar-search {
+        width: 170px;
+        height: 42px;
+        padding: 0 12px;
+    }
+
+    .search-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .topbar-search input {
+        margin-left: 10px;
+        font-size: 14px;
+    }
+
+    .topbar-notification {
+        width: 36px;
+        height: 36px;
+    }
+
+        .topbar-notification svg {
+            width: 24px;
+            height: 24px;
+        }
+
+    .user-avatar {
+        width: 38px;
+        height: 38px;
+        font-size: 17px;
+    }
+}

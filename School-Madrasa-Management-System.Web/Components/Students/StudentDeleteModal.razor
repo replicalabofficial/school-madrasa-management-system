@@ -1,0 +1,151 @@
+﻿@if (IsOpen && Student is not null)
+{
+    <div class="student-delete-overlay"
+         @onclick="HandleOverlayClick">
+
+        <div class="student-delete-modal"
+             @onclick:stopPropagation="true">
+
+            <!-- =========================================
+                 ICON
+                 ========================================= -->
+
+            <div class="student-delete-icon-wrapper">
+
+                <div class="student-delete-icon">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <path d="M4 7h16" />
+
+                        <path d="M9 7V4h6v3" />
+
+                        <path d="M7 7l1 13h8l1-13" />
+
+                        <path d="M10 11v5" />
+
+                        <path d="M14 11v5" />
+
+                    </svg>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 CONTENT
+                 ========================================= -->
+
+            <div class="student-delete-content">
+
+                <h2>
+                    Delete Student?
+                </h2>
+
+                <p>
+                    Are you sure you want to delete
+                    <strong>@Student.Name</strong>?
+                </p>
+
+                <span class="student-delete-warning">
+                    This action cannot be undone.
+                </span>
+
+            </div>
+
+
+            <!-- =========================================
+                 ACTIONS
+                 ========================================= -->
+
+            <div class="student-delete-actions">
+
+                <button type="button"
+                        class="student-delete-cancel"
+                        @onclick="CloseModal">
+
+                    Cancel
+
+                </button>
+
+
+                <button type="button"
+                        class="student-delete-confirm"
+                        @onclick="ConfirmDelete">
+
+                    Delete Student
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+@code {
+
+    // =========================================
+    // PARAMETERS
+    // =========================================
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+
+    [Parameter]
+    public StudentTable.StudentRow? Student { get; set; }
+
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+
+    [Parameter]
+    public EventCallback<StudentTable.StudentRow> OnDeleteConfirmed { get; set; }
+
+
+    // =========================================
+    // CLOSE
+    // =========================================
+
+    private async Task CloseModal()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+
+    // =========================================
+    // CONFIRM DELETE
+    // =========================================
+
+    private async Task ConfirmDelete()
+    {
+        if (Student is null)
+            return;
+
+        await OnDeleteConfirmed.InvokeAsync(Student);
+
+        await OnClose.InvokeAsync();
+    }
+
+
+    // =========================================
+    // OVERLAY CLICK
+    // =========================================
+
+    private async Task HandleOverlayClick()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+}

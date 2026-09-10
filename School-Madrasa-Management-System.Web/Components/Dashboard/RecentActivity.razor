@@ -1,0 +1,337 @@
+﻿@rendermode InteractiveServer
+
+<div class="recent-activity">
+
+    <!-- =========================================
+         HEADER
+    ========================================== -->
+
+    <div class="recent-activity-header">
+
+        <div class="recent-activity-header-content">
+
+            <h2>
+                Recent Activity
+            </h2>
+
+            <p>
+                @HeaderDescription
+            </p>
+
+        </div>
+
+        <!-- View All -->
+
+        <a href="/activity-log"
+           class="recent-activity-view-all">
+
+            <span>
+                View All
+            </span>
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+
+                <path d="M9 5l7 7-7 7" />
+
+            </svg>
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================================
+         ACTIVITY LIST
+    ========================================== -->
+
+    <div class="activity-list">
+
+        @foreach (var activity in Activities)
+        {
+            <div class="activity-item">
+
+                <div class="activity-icon @activity.IconClass">
+
+                    @if (activity.Type == "fee")
+                    {
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+
+                            <rect x="3.5"
+                                  y="6"
+                                  width="17"
+                                  height="12"
+                                  rx="2" />
+
+                            <path d="M3.5 10h17" />
+
+                            <path d="M7 14h4" />
+
+                        </svg>
+                    }
+                    else if (activity.Type == "salary")
+                    {
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+
+                            <rect x="3.5"
+                                  y="5"
+                                  width="17"
+                                  height="14"
+                                  rx="2" />
+
+                            <circle cx="12"
+                                    cy="12"
+                                    r="2.5" />
+
+                            <path d="M7 9h.01" />
+
+                            <path d="M17 15h.01" />
+
+                        </svg>
+                    }
+                    else if (activity.Type == "student")
+                    {
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+
+                            <circle cx="9"
+                                    cy="8"
+                                    r="3" />
+
+                            <path d="M3.5 19c.8-3 2.6-4.5 5.5-4.5s4.7 1.5 5.5 4.5" />
+
+                            <path d="M17 14v6" />
+
+                            <path d="M14 17h6" />
+
+                        </svg>
+                    }
+                    else if (activity.Type == "expense")
+                    {
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+
+                            <path d="M5 5h14" />
+
+                            <path d="M7 5v4c0 2.8 2.2 5 5 5s5-2.2 5-5V5" />
+
+                            <path d="M12 14v5" />
+
+                            <path d="M8 19h8" />
+
+                        </svg>
+                    }
+                    else if (activity.Type == "income")
+                    {
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+
+                            <path d="M12 3v18" />
+
+                            <path d="M16 7.5c-.8-1-2.1-1.5-4-1.5-2.2 0-4 1.1-4 3s1.6 2.7 4 3.2 4 1.2 4 3.2-1.8 3.1-4 3.1c-1.9 0-3.3-.6-4.2-1.7" />
+
+                        </svg>
+                    }
+
+                </div>
+
+
+                <div class="activity-content">
+
+                    <div class="activity-main">
+
+                        <span class="activity-title">
+                            @activity.Title
+                        </span>
+
+                        <span class="activity-user">
+                            @activity.User
+                        </span>
+
+                    </div>
+
+
+                    <div class="activity-meta">
+
+                        <span>
+                            @activity.Location
+                        </span>
+
+                        <span class="activity-separator">
+                            ·
+                        </span>
+
+                        <span>
+                            @activity.Date
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string UserType { get; set; } = "head-office";
+
+
+    private string HeaderDescription =>
+        UserType switch
+        {
+            "branch-01" => "Latest activities from Branch 01.",
+            "branch-02" => "Latest activities from Branch 02.",
+            _ => "Latest activities across the organization."
+        };
+
+
+    private List<ActivityItem> Activities =>
+        UserType switch
+        {
+            "branch-01" => new List<ActivityItem>
+            {
+                new()
+                {
+                    Type = "fee",
+                    IconClass = "fee-icon",
+                    Title = "Fee Rs. 3,500 received",
+                    User = "Accountant (B01)",
+                    Location = "Branch 01",
+                    Date = "2025-09-07 10:32 AM"
+                },
+
+                new()
+                {
+                    Type = "income",
+                    IconClass = "income-icon",
+                    Title = "Income recorded: Monthly Fees Rs. 1,25,000",
+                    User = "Accountant (B01)",
+                    Location = "Branch 01",
+                    Date = "2025-09-05 04:00 PM"
+                }
+            },
+
+
+            "branch-02" => new List<ActivityItem>
+            {
+                new()
+                {
+                    Type = "student",
+                    IconClass = "student-icon",
+                    Title = "New student Ibrahim Shah enrolled",
+                    User = "Accountant (B02)",
+                    Location = "Branch 02",
+                    Date = "2025-09-06 03:45 PM"
+                }
+            },
+
+
+            _ => new List<ActivityItem>
+            {
+                new()
+                {
+                    Type = "fee",
+                    IconClass = "fee-icon",
+                    Title = "Fee Rs. 3,500 received",
+                    User = "Accountant (B01)",
+                    Location = "Branch 01",
+                    Date = "2025-09-07 10:32 AM"
+                },
+
+                new()
+                {
+                    Type = "salary",
+                    IconClass = "salary-icon",
+                    Title = "Salary paid to Maulana Tariq",
+                    User = "Mr. Adnan (HO)",
+                    Location = "Head Office",
+                    Date = "2025-09-07 09:15 AM"
+                },
+
+                new()
+                {
+                    Type = "student",
+                    IconClass = "student-icon",
+                    Title = "New student Ibrahim Shah enrolled",
+                    User = "Accountant (B02)",
+                    Location = "Branch 02",
+                    Date = "2025-09-06 03:45 PM"
+                },
+
+                new()
+                {
+                    Type = "expense",
+                    IconClass = "expense-icon",
+                    Title = "Expense added: Head Office Rent Rs. 50,000",
+                    User = "Mr. Adnan (HO)",
+                    Location = "Head Office",
+                    Date = "2025-09-06 11:00 AM"
+                },
+
+                new()
+                {
+                    Type = "income",
+                    IconClass = "income-icon",
+                    Title = "Income recorded: Monthly Fees Rs. 1,25,000",
+                    User = "Accountant (B01)",
+                    Location = "Branch 01",
+                    Date = "2025-09-05 04:00 PM"
+                }
+            }
+        };
+
+
+    private class ActivityItem
+    {
+        public string Type { get; set; } = string.Empty;
+
+        public string IconClass { get; set; } = string.Empty;
+
+        public string Title { get; set; } = string.Empty;
+
+        public string User { get; set; } = string.Empty;
+
+        public string Location { get; set; } = string.Empty;
+
+        public string Date { get; set; } = string.Empty;
+    }
+}

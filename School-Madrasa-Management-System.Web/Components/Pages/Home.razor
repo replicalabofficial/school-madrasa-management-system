@@ -1,0 +1,154 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+@implements IDisposable
+
+@inject School_Madrasa_Management_System.Web.Services.UserRoleState RoleState
+
+<PageTitle>@DashboardTitle - Al-Noor Management System</PageTitle>
+
+
+<div class="dashboard-page">
+
+    <!-- =========================================
+         DASHBOARD HEADER
+    ========================================= -->
+
+    <DashboardHeader DashboardTitle="@DashboardTitle"
+                     DashboardSubtitle="@DashboardSubtitle" />
+
+
+    <!-- =========================================
+         DASHBOARD STATS
+
+Data changes according to current role.
+    ========================================= -->
+
+    <DashboardStats UserType="@RoleState.CurrentRole" />
+
+
+    <!-- =========================================
+         FINANCIAL SECTION
+
+Same UI component is reused for:
+         - Head Office
+         - Branch 01
+         - Branch 02
+    ========================================= -->
+
+    <div class="dashboard-financial-grid">
+
+        <FinancialOverview UserType="@RoleState.CurrentRole" />
+
+        <IncomeBreakdown UserType="@RoleState.CurrentRole" />
+
+    </div>
+
+
+    <!-- =========================================
+         BRANCH OVERVIEW
+
+IMPORTANT:
+         This section is ONLY visible to
+         Head Office Admin.
+
+Branch 01 and Branch 02 will NOT
+         see Branch Overview.
+    ========================================= -->
+    @if (IsHeadOffice)
+    {
+        <BranchOverview />
+    }
+
+
+    <!-- =========================================
+         RECENT ACTIVITY
+
+Activity is filtered according
+         to current role.
+    ========================================= -->
+
+    <RecentActivity UserType="@RoleState.CurrentRole" />
+
+</div>
+
+
+@code {
+
+    /* =========================================
+       HEAD OFFICE CHECK
+    ========================================= */
+
+    private bool IsHeadOffice =>
+        RoleState.CurrentRole == "head-office";
+
+
+    /* =========================================
+       DASHBOARD TITLE
+    ========================================= */
+
+    private string DashboardTitle =>
+        RoleState.CurrentRole switch
+        {
+            "branch-01" =>
+                "Branch 01 Dashboard",
+
+            "branch-02" =>
+                "Branch 02 Dashboard",
+
+            _ =>
+                "Head Office Dashboard"
+        };
+
+
+    /* =========================================
+       DASHBOARD SUBTITLE
+    ========================================= */
+
+    private string DashboardSubtitle =>
+        RoleState.CurrentRole switch
+        {
+            "branch-01" =>
+                "Branch 01 · Academic Year 2025-26",
+
+            "branch-02" =>
+                "Branch 02 · Academic Year 2025-26",
+
+            _ =>
+                "Academic Year 2025-26 · Combined Data"
+        };
+
+
+    /* =========================================
+       INITIALIZE
+
+Listen for role changes from:
+       - Sidebar Role Switcher
+       - Topbar User Dropdown
+    ========================================= */
+
+    protected override void OnInitialized()
+    {
+        RoleState.OnChange += HandleRoleChanged;
+    }
+
+
+    /* =========================================
+       ROLE CHANGE HANDLER
+    ========================================= */
+
+    private void HandleRoleChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+
+    /* =========================================
+       CLEANUP
+    ========================================= */
+
+    public void Dispose()
+    {
+        RoleState.OnChange -= HandleRoleChanged;
+    }
+}

@@ -1,0 +1,122 @@
+﻿/* =========================================
+   DASHBOARD HEADER
+   ========================================= */
+
+.dashboard-header {
+    width: 100%;
+    margin: 0 0 30px 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   HEADER CONTENT
+   ========================================= */
+
+.dashboard-header-content {
+    width: 100%;
+}
+
+
+/* =========================================
+   TITLE
+   ========================================= */
+
+.dashboard-header h1 {
+    margin: 0 0 7px 0;
+    color: #1e293b;
+    font-size: 30px;
+    font-weight: 650;
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+}
+
+
+/* =========================================
+   SUBTITLE
+   ========================================= */
+
+.dashboard-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 1024px) {
+
+    .dashboard-header {
+        margin-bottom: 26px;
+    }
+
+        .dashboard-header h1 {
+            font-size: 28px;
+        }
+
+        .dashboard-header p {
+            font-size: 13px;
+        }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 768px) {
+
+    .dashboard-header {
+        margin-bottom: 24px;
+    }
+
+        .dashboard-header h1 {
+            font-size: 26px;
+        }
+
+        .dashboard-header p {
+            font-size: 13px;
+        }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 576px) {
+
+    .dashboard-header {
+        margin-bottom: 20px;
+    }
+
+        .dashboard-header h1 {
+            font-size: 23px;
+            letter-spacing: -0.2px;
+        }
+
+        .dashboard-header p {
+            font-size: 12px;
+        }
+}
+
+
+/* =========================================
+   VERY SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 400px) {
+
+    .dashboard-header h1 {
+        font-size: 21px;
+    }
+
+    .dashboard-header p {
+        font-size: 11px;
+    }
+}

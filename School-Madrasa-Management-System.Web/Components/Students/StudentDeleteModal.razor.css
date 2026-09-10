@@ -1,0 +1,196 @@
+﻿/* =========================================
+   OVERLAY
+   ========================================= */
+
+.student-delete-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.48);
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   MODAL
+   ========================================= */
+
+.student-delete-modal {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 28px;
+    box-sizing: border-box;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+}
+
+
+/* =========================================
+   ICON WRAPPER
+   ========================================= */
+
+.student-delete-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+
+/* =========================================
+   DELETE ICON
+   ========================================= */
+
+.student-delete-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 50%;
+    color: #dc2626;
+}
+
+
+    .student-delete-icon svg {
+        width: 23px;
+        height: 23px;
+    }
+
+
+/* =========================================
+   CONTENT
+   ========================================= */
+
+.student-delete-content {
+    text-align: center;
+}
+
+
+    .student-delete-content h2 {
+        margin: 0;
+        color: #172033;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+
+    .student-delete-content p {
+        margin: 9px 0 0;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+
+    .student-delete-content strong {
+        color: #334155;
+        font-weight: 600;
+    }
+
+
+.student-delete-warning {
+    display: block;
+    margin-top: 8px;
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   ACTIONS
+   ========================================= */
+
+.student-delete-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+    margin-top: 25px;
+}
+
+
+.student-delete-cancel,
+.student-delete-confirm {
+    min-height: 40px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   CANCEL
+   ========================================= */
+
+.student-delete-cancel {
+    background: #ffffff;
+    border: 1px solid #dbe2ea;
+    color: #536176;
+}
+
+
+    .student-delete-cancel:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        color: #334155;
+    }
+
+
+/* =========================================
+   DELETE
+   ========================================= */
+
+.student-delete-confirm {
+    background: #dc2626;
+    border: 1px solid #dc2626;
+    color: #ffffff;
+}
+
+
+    .student-delete-confirm:hover {
+        background: #b91c1c;
+        border-color: #b91c1c;
+    }
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 480px) {
+
+    .student-delete-overlay {
+        padding: 14px;
+    }
+
+
+    .student-delete-modal {
+        padding: 22px;
+    }
+
+
+    .student-delete-actions {
+        flex-direction: column-reverse;
+    }
+
+
+    .student-delete-cancel,
+    .student-delete-confirm {
+        width: 100%;
+    }
+}

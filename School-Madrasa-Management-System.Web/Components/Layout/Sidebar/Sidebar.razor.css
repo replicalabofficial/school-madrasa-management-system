@@ -1,0 +1,70 @@
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #0f172a;
+    color: #94a3b8;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   SIDEBAR CONTENT
+   ========================================================= */
+
+.sidebar-content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   IMPORTANT
+   ========================================================= */
+
+/*
+   Sidebar width is controlled by MainLayout.
+   Normal  : 280px
+   Collapse: 98px
+
+   Do NOT add another fixed width here.
+*/
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+    .sidebar {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    .sidebar {
+        width: 100%;
+        max-width: none;
+    }
+}

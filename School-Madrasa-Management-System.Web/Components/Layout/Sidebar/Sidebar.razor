@@ -1,0 +1,50 @@
+﻿@rendermode InteractiveServer
+@implements IDisposable
+@inject School_Madrasa_Management_System.Web.Services.UserRoleState RoleState
+
+<div class="sidebar">
+
+    <SidebarHeader />
+
+    <div class="sidebar-content">
+
+        <SidebarUserInfo UserType="@RoleState.CurrentRole"
+                         UserName="@RoleState.UserName"
+                         UserRole="@RoleState.UserRole" />
+
+        <SidebarNavigation UserType="@RoleState.CurrentRole" />
+
+    </div>
+
+    <SidebarRoleSwitcher SelectedRole="@RoleState.CurrentRole"
+                         SelectedRoleChanged="HandleRoleChanged" />
+
+</div>
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        RoleState.OnChange += HandleRoleStateChanged;
+    }
+
+
+    private void HandleRoleStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+
+    private void HandleRoleChanged(string role)
+    {
+        RoleState.SetRole(role);
+    }
+
+
+    public void Dispose()
+    {
+        RoleState.OnChange -= HandleRoleStateChanged;
+    }
+
+}
