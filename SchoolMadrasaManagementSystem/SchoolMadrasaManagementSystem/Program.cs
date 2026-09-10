@@ -41,8 +41,9 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole(Roles.HeadOfficeAdmin, Roles.BranchAdmin, Roles.BranchUser));
 });
 
-// Register Branch Context Service for Data Isolation & Security
+// Register Application & Security Services
 builder.Services.AddScoped<IBranchContextService, BranchContextService>();
+builder.Services.AddScoped<IChartOfAccountService, ChartOfAccountService>();
 
 var app = builder.Build();
 
