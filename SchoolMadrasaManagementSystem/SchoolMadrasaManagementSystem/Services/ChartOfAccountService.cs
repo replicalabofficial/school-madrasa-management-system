@@ -7,6 +7,7 @@ namespace SchoolMadrasaManagementSystem.Services;
 public class ChartOfAccountService : IChartOfAccountService
 {
     private readonly AppDbContext _context;
+    private readonly IBranchContextService _branchContextService;
 
     private static readonly string[] AllowedAccountTypes =
     {
@@ -22,9 +23,10 @@ public class ChartOfAccountService : IChartOfAccountService
         "Expenses"
     };
 
-    public ChartOfAccountService(AppDbContext context)
+    public ChartOfAccountService(AppDbContext context, IBranchContextService branchContextService)
     {
         _context = context;
+        _branchContextService = branchContextService;
     }
 
     public async Task<List<ChartOfAccount>> GetAllAsync()
@@ -42,6 +44,11 @@ public class ChartOfAccountService : IChartOfAccountService
 
     public async Task<ChartOfAccount> CreateAsync(ChartOfAccount account)
     {
+        if (!await _branchContextService.IsHeadOfficeAdminAsync())
+        {
+            throw new UnauthorizedAccessException("Only Head Office Admin is authorized to modify the Chart of Accounts.");
+        }
+
         ValidateAccount(account);
 
         bool accountIdExists = await _context.ChartOfAccounts
@@ -65,6 +72,11 @@ public class ChartOfAccountService : IChartOfAccountService
 
     public async Task<bool> UpdateAsync(ChartOfAccount account)
     {
+        if (!await _branchContextService.IsHeadOfficeAdminAsync())
+        {
+            throw new UnauthorizedAccessException("Only Head Office Admin is authorized to modify the Chart of Accounts.");
+        }
+
         ValidateAccount(account);
 
         var existingAccount = await _context.ChartOfAccounts
@@ -98,6 +110,11 @@ public class ChartOfAccountService : IChartOfAccountService
 
     public async Task<bool> SetActiveStatusAsync(int id, bool isActive)
     {
+        if (!await _branchContextService.IsHeadOfficeAdminAsync())
+        {
+            throw new UnauthorizedAccessException("Only Head Office Admin is authorized to modify the Chart of Accounts.");
+        }
+
         var account = await _context.ChartOfAccounts
             .FirstOrDefaultAsync(x => x.Id == id);
 
