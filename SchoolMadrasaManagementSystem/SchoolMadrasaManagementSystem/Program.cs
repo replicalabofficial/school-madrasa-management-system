@@ -55,6 +55,10 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 builder.Services.AddScoped<IActivityLogService, ActivityLogService>();
 
+builder.Services.AddScoped<
+    IUserManagementService,
+    UserManagementService>();
+
 var app = builder.Build();
 
 // Seed Database Roles and Initial HeadOffice User
