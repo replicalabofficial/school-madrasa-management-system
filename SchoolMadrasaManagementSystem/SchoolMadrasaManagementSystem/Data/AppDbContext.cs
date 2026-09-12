@@ -24,6 +24,8 @@ public class AppDbContext : DbContext
 
     public DbSet<ChartOfAccount> ChartOfAccounts { get; set; }
 
+    public DbSet<Salary> Salaries { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

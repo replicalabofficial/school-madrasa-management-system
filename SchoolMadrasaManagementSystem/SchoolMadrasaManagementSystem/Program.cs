@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Application Services
 builder.Services.AddScoped<IChartOfAccountService, ChartOfAccountService>();
 
+builder.Services.AddScoped<ISalaryService, SalaryService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
