@@ -30,6 +30,11 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
         builder.Property(x => x.Notes)
             .HasMaxLength(500);
 
+        builder.HasOne(x => x.ChartOfAccount)
+            .WithMany()
+            .HasForeignKey(x => x.ChartOfAccountId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasOne(x => x.Branch)
             .WithMany()
             .HasForeignKey(x => x.BranchId)

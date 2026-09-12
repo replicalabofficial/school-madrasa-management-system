@@ -6,7 +6,12 @@ public class Income
 
     public DateTime Date { get; set; }
 
+    // Existing category kept for backward compatibility
     public string Category { get; set; } = string.Empty;
+
+    public int ChartOfAccountId { get; set; }
+
+    public ChartOfAccount ChartOfAccount { get; set; } = null!;
 
     public decimal Amount { get; set; }
 

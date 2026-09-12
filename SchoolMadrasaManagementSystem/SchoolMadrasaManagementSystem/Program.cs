@@ -18,6 +18,10 @@ builder.Services.AddScoped<IChartOfAccountService, ChartOfAccountService>();
 
 builder.Services.AddScoped<ISalaryService, SalaryService>();
 
+builder.Services.AddScoped<IIncomeService, IncomeService>();
+
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
