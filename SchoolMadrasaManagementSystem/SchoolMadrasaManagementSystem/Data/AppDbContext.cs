@@ -19,6 +19,7 @@ namespace SchoolMadrasaManagementSystem.Data
         public DbSet<ChartOfAccount> ChartOfAccounts { get; set; }
         public DbSet<Salary> Salaries { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
+        public DbSet<SystemSetting> SystemSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

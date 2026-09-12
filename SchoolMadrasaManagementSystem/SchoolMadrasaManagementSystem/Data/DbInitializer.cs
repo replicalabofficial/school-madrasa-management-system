@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SchoolMadrasaManagementSystem.Entities;
 
 namespace SchoolMadrasaManagementSystem.Data
@@ -9,9 +10,15 @@ namespace SchoolMadrasaManagementSystem.Data
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var context = serviceProvider.GetRequiredService<AppDbContext>();
 
             // 1. Seed Roles
-            string[] roleNames = { Roles.HeadOfficeAdmin, Roles.BranchAdmin, Roles.BranchUser };
+            string[] roleNames =
+            {
+                Roles.HeadOfficeAdmin,
+                Roles.BranchAdmin,
+                Roles.BranchUser
+            };
 
             foreach (var roleName in roleNames)
             {
@@ -37,12 +44,40 @@ namespace SchoolMadrasaManagementSystem.Data
                     EmailConfirmed = true
                 };
 
-                var createResult = await userManager.CreateAsync(newAdmin, "Admin@123456");
+                var createResult = await userManager.CreateAsync(
+                    newAdmin,
+                    "Admin@123456");
 
                 if (createResult.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(newAdmin, Roles.HeadOfficeAdmin);
+                    await userManager.AddToRoleAsync(
+                        newAdmin,
+                        Roles.HeadOfficeAdmin);
                 }
+            }
+
+            // 3. Seed Default System Settings
+            var existingSettings = await context.SystemSettings
+                .AnyAsync();
+
+            if (!existingSettings)
+            {
+                var defaultSettings = new SystemSetting
+                {
+                    InstitutionName = "School & Madrasa",
+                    Address = null,
+                    Phone = null,
+                    Email = null,
+                    Currency = "PKR",
+                    DateFormat = "dd/MM/yyyy",
+                    AcademicSession = DateTime.UtcNow.Year.ToString(),
+                    LogoPath = null,
+                    IsActive = true
+                };
+
+                context.SystemSettings.Add(defaultSettings);
+
+                await context.SaveChangesAsync();
             }
         }
     }

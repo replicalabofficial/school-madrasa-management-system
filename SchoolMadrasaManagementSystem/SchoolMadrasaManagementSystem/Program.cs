@@ -55,6 +55,8 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 builder.Services.AddScoped<IActivityLogService, ActivityLogService>();
 
+builder.Services.AddScoped<ISystemSettingService, SystemSettingService>();
+
 builder.Services.AddScoped<
     IUserManagementService,
     UserManagementService>();
