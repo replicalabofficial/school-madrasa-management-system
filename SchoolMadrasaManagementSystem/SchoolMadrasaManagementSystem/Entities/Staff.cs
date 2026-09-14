@@ -1,6 +1,8 @@
-﻿namespace SchoolMadrasaManagementSystem.Entities;
+﻿using SchoolMadrasaManagementSystem.Services;
 
-public class Staff
+namespace SchoolMadrasaManagementSystem.Entities;
+
+public class Staff : IBranchEntity
 {
     public int Id { get; set; }
 

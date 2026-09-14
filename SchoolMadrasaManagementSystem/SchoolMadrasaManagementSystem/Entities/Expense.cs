@@ -1,6 +1,8 @@
-﻿namespace SchoolMadrasaManagementSystem.Entities;
+﻿using SchoolMadrasaManagementSystem.Services;
 
-public class Expense
+namespace SchoolMadrasaManagementSystem.Entities;
+
+public class Expense : IBranchEntity
 {
     public int Id { get; set; }
 

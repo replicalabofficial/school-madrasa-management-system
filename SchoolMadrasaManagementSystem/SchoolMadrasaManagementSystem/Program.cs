@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using SchoolMadrasaManagementSystem.Components;
 using SchoolMadrasaManagementSystem.Data;
 using SchoolMadrasaManagementSystem.Entities;
+using SchoolMadrasaManagementSystem.Security;
 using SchoolMadrasaManagementSystem.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,24 +44,17 @@ builder.Services.AddAuthorization(options =>
 });
 
 // Register Application & Security Services
+builder.Services.AddScoped<IBranchSecurityContext, BranchSecurityContext>();
 builder.Services.AddScoped<IBranchContextService, BranchContextService>();
 builder.Services.AddScoped<IChartOfAccountService, ChartOfAccountService>();
-
 builder.Services.AddScoped<ISalaryService, SalaryService>();
-
 builder.Services.AddScoped<IIncomeService, IncomeService>();
-
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
-
+builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
-
 builder.Services.AddScoped<IActivityLogService, ActivityLogService>();
-
 builder.Services.AddScoped<ISystemSettingService, SystemSettingService>();
-
-builder.Services.AddScoped<
-    IUserManagementService,
-    UserManagementService>();
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 
 var app = builder.Build();
 

@@ -1,58 +1,48 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolMadrasaManagementSystem.Data;
 using SchoolMadrasaManagementSystem.Reports;
+using SchoolMadrasaManagementSystem.Security;
 
 namespace SchoolMadrasaManagementSystem.Services;
 
 public class ReportService : IReportService
 {
     private readonly AppDbContext _context;
+    private readonly IBranchSecurityContext _securityContext;
 
-    public ReportService(AppDbContext context)
+    public ReportService(AppDbContext context, IBranchSecurityContext securityContext)
     {
         _context = context;
+        _securityContext = securityContext;
     }
 
-    public async Task<List<IncomeReportDto>> GetIncomeReportAsync(
-        ReportFilter filter)
+    public async Task<List<IncomeReportDto>> GetIncomeReportAsync(ReportFilter filter)
     {
         var query = _context.Income
             .AsNoTracking()
             .Include(x => x.ChartOfAccount)
             .Include(x => x.Branch)
-            .AsQueryable();
+            .ApplyBranchFilter(_securityContext, filter.BranchId);
 
         if (filter.DateFrom.HasValue)
         {
-            query = query.Where(x =>
-                x.Date >= filter.DateFrom.Value);
+            query = query.Where(x => x.Date >= filter.DateFrom.Value);
         }
 
         if (filter.DateTo.HasValue)
         {
             var dateTo = filter.DateTo.Value.Date.AddDays(1);
-
-            query = query.Where(x =>
-                x.Date < dateTo);
-        }
-
-        if (filter.BranchId.HasValue)
-        {
-            query = query.Where(x =>
-                x.BranchId == filter.BranchId.Value);
+            query = query.Where(x => x.Date < dateTo);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.AccountType))
         {
-            query = query.Where(x =>
-                x.ChartOfAccount.AccountType ==
-                filter.AccountType);
+            query = query.Where(x => x.ChartOfAccount.AccountType == filter.AccountType);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Category))
         {
-            query = query.Where(x =>
-                x.Category == filter.Category);
+            query = query.Where(x => x.Category == filter.Category);
         }
 
         return await query
@@ -63,8 +53,7 @@ public class ReportService : IReportService
                 Date = x.Date,
                 Category = x.Category,
                 AccountId = x.ChartOfAccount.AccountId,
-                AccountDescription =
-                    x.ChartOfAccount.AccountDescription,
+                AccountDescription = x.ChartOfAccount.AccountDescription,
                 Amount = x.Amount,
                 Description = x.Description,
                 BranchName = x.Branch.Name,
@@ -73,46 +62,33 @@ public class ReportService : IReportService
             .ToListAsync();
     }
 
-    public async Task<List<ExpenseReportDto>> GetExpenseReportAsync(
-        ReportFilter filter)
+    public async Task<List<ExpenseReportDto>> GetExpenseReportAsync(ReportFilter filter)
     {
         var query = _context.Expenses
             .AsNoTracking()
             .Include(x => x.ChartOfAccount)
             .Include(x => x.Branch)
-            .AsQueryable();
+            .ApplyBranchFilter(_securityContext, filter.BranchId);
 
         if (filter.DateFrom.HasValue)
         {
-            query = query.Where(x =>
-                x.Date >= filter.DateFrom.Value);
+            query = query.Where(x => x.Date >= filter.DateFrom.Value);
         }
 
         if (filter.DateTo.HasValue)
         {
             var dateTo = filter.DateTo.Value.Date.AddDays(1);
-
-            query = query.Where(x =>
-                x.Date < dateTo);
-        }
-
-        if (filter.BranchId.HasValue)
-        {
-            query = query.Where(x =>
-                x.BranchId == filter.BranchId.Value);
+            query = query.Where(x => x.Date < dateTo);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.AccountType))
         {
-            query = query.Where(x =>
-                x.ChartOfAccount.AccountType ==
-                filter.AccountType);
+            query = query.Where(x => x.ChartOfAccount.AccountType == filter.AccountType);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Category))
         {
-            query = query.Where(x =>
-                x.Category == filter.Category);
+            query = query.Where(x => x.Category == filter.Category);
         }
 
         return await query
@@ -123,8 +99,7 @@ public class ReportService : IReportService
                 Date = x.Date,
                 Category = x.Category,
                 AccountId = x.ChartOfAccount.AccountId,
-                AccountDescription =
-                    x.ChartOfAccount.AccountDescription,
+                AccountDescription = x.ChartOfAccount.AccountDescription,
                 Amount = x.Amount,
                 Description = x.Description,
                 BranchName = x.Branch.Name,
@@ -133,45 +108,33 @@ public class ReportService : IReportService
             .ToListAsync();
     }
 
-    public async Task<List<FeeReportDto>> GetFeeReportAsync(
-        ReportFilter filter)
+    public async Task<List<FeeReportDto>> GetFeeReportAsync(ReportFilter filter)
     {
         var query = _context.Fees
             .AsNoTracking()
             .Include(x => x.Student)
             .Include(x => x.Branch)
-            .AsQueryable();
+            .ApplyBranchFilter(_securityContext, filter.BranchId);
 
         if (filter.DateFrom.HasValue)
         {
-            query = query.Where(x =>
-                x.Date >= filter.DateFrom.Value);
+            query = query.Where(x => x.Date >= filter.DateFrom.Value);
         }
 
         if (filter.DateTo.HasValue)
         {
             var dateTo = filter.DateTo.Value.Date.AddDays(1);
-
-            query = query.Where(x =>
-                x.Date < dateTo);
-        }
-
-        if (filter.BranchId.HasValue)
-        {
-            query = query.Where(x =>
-                x.BranchId == filter.BranchId.Value);
+            query = query.Where(x => x.Date < dateTo);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Category))
         {
-            query = query.Where(x =>
-                x.Category == filter.Category);
+            query = query.Where(x => x.Category == filter.Category);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Status))
         {
-            query = query.Where(x =>
-                x.Status == filter.Status);
+            query = query.Where(x => x.Status == filter.Status);
         }
 
         return await query
@@ -192,49 +155,29 @@ public class ReportService : IReportService
             .ToListAsync();
     }
 
-    public async Task<List<SalaryReportDto>> GetSalaryReportAsync(
-        ReportFilter filter)
+    public async Task<List<SalaryReportDto>> GetSalaryReportAsync(ReportFilter filter)
     {
         var query = _context.Salaries
             .AsNoTracking()
             .Include(x => x.Staff)
             .Include(x => x.Branch)
-            .AsQueryable();
-
-        if (filter.BranchId.HasValue)
-        {
-            query = query.Where(x =>
-                x.BranchId == filter.BranchId.Value);
-        }
+            .ApplyBranchFilter(_securityContext, filter.BranchId);
 
         if (!string.IsNullOrWhiteSpace(filter.Status))
         {
-            query = query.Where(x =>
-                x.Status == filter.Status);
+            query = query.Where(x => x.Status == filter.Status);
         }
 
         if (filter.DateFrom.HasValue)
         {
-            var monthFrom =
-                filter.DateFrom.Value.ToString("yyyy-MM");
-
-            query = query.Where(x =>
-                string.Compare(
-                    x.SalaryMonth,
-                    monthFrom,
-                    StringComparison.Ordinal) >= 0);
+            var monthFrom = filter.DateFrom.Value.ToString("yyyy-MM");
+            query = query.Where(x => string.Compare(x.SalaryMonth, monthFrom, StringComparison.Ordinal) >= 0);
         }
 
         if (filter.DateTo.HasValue)
         {
-            var monthTo =
-                filter.DateTo.Value.ToString("yyyy-MM");
-
-            query = query.Where(x =>
-                string.Compare(
-                    x.SalaryMonth,
-                    monthTo,
-                    StringComparison.Ordinal) <= 0);
+            var monthTo = filter.DateTo.Value.ToString("yyyy-MM");
+            query = query.Where(x => string.Compare(x.SalaryMonth, monthTo, StringComparison.Ordinal) <= 0);
         }
 
         return await query
@@ -259,18 +202,20 @@ public class ReportService : IReportService
             .ToListAsync();
     }
 
-    public async Task<List<BranchFinancialReportDto>>
-        GetBranchFinancialReportAsync(
-            ReportFilter filter)
+    public async Task<List<BranchFinancialReportDto>> GetBranchFinancialReportAsync(ReportFilter filter)
     {
         var branchesQuery = _context.Branches
             .AsNoTracking()
             .AsQueryable();
 
-        if (filter.BranchId.HasValue)
+        if (!_securityContext.IsHeadOffice)
         {
-            branchesQuery = branchesQuery.Where(x =>
-                x.Id == filter.BranchId.Value);
+            var userBranchId = _securityContext.GetRequiredBranchId();
+            branchesQuery = branchesQuery.Where(x => x.Id == userBranchId);
+        }
+        else if (filter.BranchId.HasValue)
+        {
+            branchesQuery = branchesQuery.Where(x => x.Id == filter.BranchId.Value);
         }
 
         var branches = await branchesQuery
@@ -308,19 +253,12 @@ public class ReportService : IReportService
                 TotalIncome = income,
                 TotalExpenses = expense,
                 TotalSalary = salary,
-
-                NetBalance =
-                    income +
-                    fee -
-                    expense -
-                    salary
+                NetBalance = income + fee - expense - salary
             };
         }).ToList();
     }
 
-    public async Task<List<AccountFinancialReportDto>>
-        GetAccountFinancialReportAsync(
-            ReportFilter filter)
+    public async Task<List<AccountFinancialReportDto>> GetAccountFinancialReportAsync(ReportFilter filter)
     {
         var accountsQuery = _context.ChartOfAccounts
             .AsNoTracking()
@@ -328,8 +266,7 @@ public class ReportService : IReportService
 
         if (!string.IsNullOrWhiteSpace(filter.AccountType))
         {
-            accountsQuery = accountsQuery.Where(x =>
-                x.AccountType == filter.AccountType);
+            accountsQuery = accountsQuery.Where(x => x.AccountType == filter.AccountType);
         }
 
         var accounts = await accountsQuery
@@ -353,8 +290,7 @@ public class ReportService : IReportService
             {
                 ChartOfAccountId = account.Id,
                 AccountId = account.AccountId,
-                AccountDescription =
-                    account.AccountDescription,
+                AccountDescription = account.AccountDescription,
                 AccountType = account.AccountType,
                 TotalIncome = income,
                 TotalExpense = expense,
@@ -363,9 +299,7 @@ public class ReportService : IReportService
         }).ToList();
     }
 
-    public async Task<List<ChartOfAccountReportDto>>
-        GetChartOfAccountReportAsync(
-            ReportFilter filter)
+    public async Task<List<ChartOfAccountReportDto>> GetChartOfAccountReportAsync(ReportFilter filter)
     {
         var query = _context.ChartOfAccounts
             .AsNoTracking()
@@ -373,14 +307,12 @@ public class ReportService : IReportService
 
         if (!string.IsNullOrWhiteSpace(filter.AccountType))
         {
-            query = query.Where(x =>
-                x.AccountType == filter.AccountType);
+            query = query.Where(x => x.AccountType == filter.AccountType);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Category))
         {
-            query = query.Where(x =>
-                x.AccountDescription == filter.Category);
+            query = query.Where(x => x.AccountDescription == filter.Category);
         }
 
         return await query
@@ -389,84 +321,43 @@ public class ReportService : IReportService
             {
                 Id = x.Id,
                 AccountId = x.AccountId,
-                AccountDescription =
-                    x.AccountDescription,
-                AccountType = x.AccountType,
-                IsActive = x.IsActive
+                AccountDescription = x.AccountDescription,
+                AccountType = x.AccountType
             })
             .ToListAsync();
     }
 
-    public async Task<List<MonthlyFinancialSummaryDto>>
-        GetMonthlyFinancialSummaryAsync(
-            ReportFilter filter)
+    public async Task<List<MonthlyFinancialSummaryDto>> GetMonthlyFinancialSummaryAsync(ReportFilter filter)
     {
         var incomes = await GetIncomeReportAsync(filter);
         var expenses = await GetExpenseReportAsync(filter);
         var fees = await GetFeeReportAsync(filter);
         var salaries = await GetSalaryReportAsync(filter);
 
-        var months = new HashSet<string>();
-
-        foreach (var item in incomes)
-        {
-            months.Add(item.Date.ToString("yyyy-MM"));
-        }
-
-        foreach (var item in expenses)
-        {
-            months.Add(item.Date.ToString("yyyy-MM"));
-        }
-
-        foreach (var item in fees)
-        {
-            months.Add(item.Date.ToString("yyyy-MM"));
-        }
-
-        foreach (var item in salaries)
-        {
-            months.Add(item.SalaryMonth);
-        }
-
-        return months
-            .OrderBy(x => x)
-            .Select(month =>
-            {
-                var income = incomes
-                    .Where(x =>
-                        x.Date.ToString("yyyy-MM") == month)
-                    .Sum(x => x.Amount);
-
-                var expense = expenses
-                    .Where(x =>
-                        x.Date.ToString("yyyy-MM") == month)
-                    .Sum(x => x.Amount);
-
-                var fee = fees
-                    .Where(x =>
-                        x.Date.ToString("yyyy-MM") == month)
-                    .Sum(x => x.Amount);
-
-                var salary = salaries
-                    .Where(x =>
-                        x.SalaryMonth == month)
-                    .Sum(x => x.NetSalary);
-
-                return new MonthlyFinancialSummaryDto
-                {
-                    Month = month,
-                    TotalFees = fee,
-                    TotalIncome = income,
-                    TotalExpenses = expense,
-                    TotalSalary = salary,
-
-                    NetBalance =
-                        income +
-                        fee -
-                        expense -
-                        salary
-                };
-            })
+        var months = incomes.Select(x => x.Date.ToString("yyyy-MM"))
+            .Concat(expenses.Select(x => x.Date.ToString("yyyy-MM")))
+            .Concat(fees.Select(x => x.Date.ToString("yyyy-MM")))
+            .Concat(salaries.Select(x => x.SalaryMonth))
+            .Distinct()
+            .OrderByDescending(x => x)
             .ToList();
+
+        return months.Select(month =>
+        {
+            var income = incomes.Where(x => x.Date.ToString("yyyy-MM") == month).Sum(x => x.Amount);
+            var fee = fees.Where(x => x.Date.ToString("yyyy-MM") == month).Sum(x => x.Amount);
+            var expense = expenses.Where(x => x.Date.ToString("yyyy-MM") == month).Sum(x => x.Amount);
+            var salary = salaries.Where(x => x.SalaryMonth == month).Sum(x => x.NetSalary);
+
+            return new MonthlyFinancialSummaryDto
+            {
+                Month = month,
+                TotalIncome = income,
+                TotalFees = fee,
+                TotalExpenses = expense,
+                TotalSalary = salary,
+                NetBalance = income + fee - expense - salary
+            };
+        }).ToList();
     }
 }

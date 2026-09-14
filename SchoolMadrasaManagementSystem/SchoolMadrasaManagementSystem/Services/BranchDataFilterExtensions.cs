@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using SchoolMadrasaManagementSystem.Entities;
 
 namespace SchoolMadrasaManagementSystem.Services
 {
@@ -9,23 +11,31 @@ namespace SchoolMadrasaManagementSystem.Services
 
     public static class BranchDataFilterExtensions
     {
-        // Server-side Automatic Branch Isolation Method
+        // Server-side Automatic Branch Isolation Method for Queries
         public static IQueryable<T> ApplyBranchFilter<T>(this IQueryable<T> query, int? userBranchId, bool isHeadOfficeAdmin) where T : class, IBranchEntity
         {
-            // If user is HeadOfficeAdmin, they can see data across ALL branches
             if (isHeadOfficeAdmin)
             {
                 return query;
             }
 
-            // If user belongs to a specific branch, restrict query results strictly to their BranchId
             if (userBranchId.HasValue)
             {
                 return query.Where(e => e.BranchId == userBranchId.Value);
             }
 
-            // Fallback: If user has no branch assigned and is not HeadOfficeAdmin, deny access to data
             return query.Where(e => false);
+        }
+
+        // Security Guard: Ensures caller has permission to access a specific entity's branch (Prevents IDOR)
+        public static void EnsureBranchAccess<T>(this T entity, int? userBranchId, bool isHeadOfficeAdmin) where T : class, IBranchEntity
+        {
+            if (isHeadOfficeAdmin) return;
+
+            if (!userBranchId.HasValue || entity.BranchId != userBranchId.Value)
+            {
+                throw new UnauthorizedAccessException("Access denied. You do not have permission to access data outside your assigned branch.");
+            }
         }
     }
 }

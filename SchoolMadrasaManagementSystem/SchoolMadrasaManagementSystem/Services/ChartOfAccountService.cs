@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SchoolMadrasaManagementSystem.Data;
 using SchoolMadrasaManagementSystem.Entities;
 
@@ -56,8 +60,7 @@ public class ChartOfAccountService : IChartOfAccountService
 
         if (accountIdExists)
         {
-            throw new InvalidOperationException(
-                "An account with this Account ID already exists.");
+            throw new InvalidOperationException("An account with this Account ID already exists.");
         }
 
         account.AccountId = account.AccountId.Trim();
@@ -88,14 +91,11 @@ public class ChartOfAccountService : IChartOfAccountService
         }
 
         bool duplicateAccountId = await _context.ChartOfAccounts
-            .AnyAsync(x =>
-                x.AccountId == account.AccountId &&
-                x.Id != account.Id);
+            .AnyAsync(x => x.AccountId == account.AccountId && x.Id != account.Id);
 
         if (duplicateAccountId)
         {
-            throw new InvalidOperationException(
-                "An account with this Account ID already exists.");
+            throw new InvalidOperationException("An account with this Account ID already exists.");
         }
 
         existingAccount.AccountId = account.AccountId.Trim();
@@ -104,7 +104,6 @@ public class ChartOfAccountService : IChartOfAccountService
         existingAccount.IsActive = account.IsActive;
 
         await _context.SaveChangesAsync();
-
         return true;
     }
 
@@ -124,7 +123,6 @@ public class ChartOfAccountService : IChartOfAccountService
         }
 
         account.IsActive = isActive;
-
         await _context.SaveChangesAsync();
 
         return true;
@@ -139,8 +137,7 @@ public class ChartOfAccountService : IChartOfAccountService
 
         if (string.IsNullOrWhiteSpace(account.AccountDescription))
         {
-            throw new ArgumentException(
-                "Account description is required.");
+            throw new ArgumentException("Account description is required.");
         }
 
         if (string.IsNullOrWhiteSpace(account.AccountType))
@@ -148,12 +145,9 @@ public class ChartOfAccountService : IChartOfAccountService
             throw new ArgumentException("Account type is required.");
         }
 
-        if (!AllowedAccountTypes.Contains(
-                account.AccountType.Trim(),
-                StringComparer.Ordinal))
+        if (!AllowedAccountTypes.Contains(account.AccountType.Trim(), StringComparer.Ordinal))
         {
-            throw new ArgumentException(
-                "Invalid account type.");
+            throw new ArgumentException("Invalid account type.");
         }
     }
 }

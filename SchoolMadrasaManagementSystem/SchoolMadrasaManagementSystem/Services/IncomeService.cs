@@ -8,23 +8,23 @@ using SchoolMadrasaManagementSystem.Entities;
 
 namespace SchoolMadrasaManagementSystem.Services;
 
-public class ExpenseService : IExpenseService
+public class IncomeService : IIncomeService
 {
     private readonly AppDbContext _context;
     private readonly IBranchContextService _branchContextService;
 
-    public ExpenseService(AppDbContext context, IBranchContextService branchContextService)
+    public IncomeService(AppDbContext context, IBranchContextService branchContextService)
     {
         _context = context;
         _branchContextService = branchContextService;
     }
 
-    public async Task<List<Expense>> GetAllAsync()
+    public async Task<List<Income>> GetAllAsync()
     {
         var isHeadOffice = await _branchContextService.IsHeadOfficeAdminAsync();
         var userBranchId = await _branchContextService.GetCurrentBranchIdAsync();
 
-        return await _context.Expenses
+        return await _context.Incomes
             .Include(x => x.ChartOfAccount)
             .Include(x => x.Branch)
             .ApplyBranchFilter(userBranchId, isHeadOffice)
@@ -32,46 +32,44 @@ public class ExpenseService : IExpenseService
             .ToListAsync();
     }
 
-    public async Task<Expense?> GetByIdAsync(int id)
+    public async Task<Income?> GetByIdAsync(int id)
     {
         var isHeadOffice = await _branchContextService.IsHeadOfficeAdminAsync();
         var userBranchId = await _branchContextService.GetCurrentBranchIdAsync();
 
-        var expense = await _context.Expenses
+        var income = await _context.Incomes
             .Include(x => x.ChartOfAccount)
             .Include(x => x.Branch)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        if (expense == null) return null;
+        if (income == null) return null;
 
-        // IDOR Check: Ensure non-HeadOffice users only view their own branch data
-        if (!isHeadOffice && userBranchId != expense.BranchId)
+        if (!isHeadOffice && userBranchId != income.BranchId)
         {
             return null;
         }
 
-        return expense;
+        return income;
     }
 
-    public async Task<Expense> CreateAsync(Expense expense)
+    public async Task<Income> CreateAsync(Income income)
     {
-        ValidateExpense(expense);
+        ValidateIncome(income);
 
         var isHeadOffice = await _branchContextService.IsHeadOfficeAdminAsync();
         var userBranchId = await _branchContextService.GetCurrentBranchIdAsync();
 
-        // Enforce user's branch for non-HeadOffice users to prevent branch spoofing
         if (!isHeadOffice)
         {
             if (!userBranchId.HasValue)
             {
                 throw new UnauthorizedAccessException("User is not assigned to any valid branch.");
             }
-            expense.BranchId = userBranchId.Value;
+            income.BranchId = userBranchId.Value;
         }
 
         var account = await _context.ChartOfAccounts
-            .FirstOrDefaultAsync(x => x.Id == expense.ChartOfAccountId);
+            .FirstOrDefaultAsync(x => x.Id == income.ChartOfAccountId);
 
         if (account is null)
         {
@@ -83,39 +81,38 @@ public class ExpenseService : IExpenseService
             throw new InvalidOperationException("Selected account is inactive.");
         }
 
-        if (!string.Equals(account.AccountType, "Expenses", StringComparison.Ordinal))
+        if (!string.Equals(account.AccountType, "Income", StringComparison.Ordinal))
         {
-            throw new InvalidOperationException("Selected account is not an Expense account.");
+            throw new InvalidOperationException("Selected account is not an Income account.");
         }
 
-        expense.Category = account.AccountDescription.Trim();
+        income.Category = account.AccountDescription.Trim();
 
-        _context.Expenses.Add(expense);
+        _context.Incomes.Add(income);
         await _context.SaveChangesAsync();
 
-        return expense;
+        return income;
     }
 
-    public async Task<bool> UpdateAsync(Expense expense)
+    public async Task<bool> UpdateAsync(Income income)
     {
-        ValidateExpense(expense);
+        ValidateIncome(income);
 
         var isHeadOffice = await _branchContextService.IsHeadOfficeAdminAsync();
         var userBranchId = await _branchContextService.GetCurrentBranchIdAsync();
 
-        var existing = await _context.Expenses
-            .FirstOrDefaultAsync(x => x.Id == expense.Id);
+        var existing = await _context.Incomes
+            .FirstOrDefaultAsync(x => x.Id == income.Id);
 
         if (existing is null)
         {
             return false;
         }
 
-        // IDOR Authorization Check
         existing.EnsureBranchAccess(userBranchId, isHeadOffice);
 
         var account = await _context.ChartOfAccounts
-            .FirstOrDefaultAsync(x => x.Id == expense.ChartOfAccountId);
+            .FirstOrDefaultAsync(x => x.Id == income.ChartOfAccountId);
 
         if (account is null)
         {
@@ -127,47 +124,46 @@ public class ExpenseService : IExpenseService
             throw new InvalidOperationException("Selected account is inactive.");
         }
 
-        if (!string.Equals(account.AccountType, "Expenses", StringComparison.Ordinal))
+        if (!string.Equals(account.AccountType, "Income", StringComparison.Ordinal))
         {
-            throw new InvalidOperationException("Selected account is not an Expense account.");
+            throw new InvalidOperationException("Selected account is not an Income account.");
         }
 
-        existing.Date = expense.Date;
-        existing.ChartOfAccountId = expense.ChartOfAccountId;
+        existing.Date = income.Date;
+        existing.ChartOfAccountId = income.ChartOfAccountId;
         existing.Category = account.AccountDescription.Trim();
-        existing.Amount = expense.Amount;
-        existing.Description = expense.Description.Trim();
+        existing.Amount = income.Amount;
+        existing.Description = income.Description.Trim();
 
-        // Prevent spoofing BranchId during update for non-HeadOffice users
         if (isHeadOffice)
         {
-            existing.BranchId = expense.BranchId;
+            existing.BranchId = income.BranchId;
         }
 
-        existing.Notes = expense.Notes?.Trim();
+        existing.Notes = income.Notes?.Trim();
 
         await _context.SaveChangesAsync();
         return true;
     }
 
-    private static void ValidateExpense(Expense expense)
+    private static void ValidateIncome(Income income)
     {
-        if (expense.ChartOfAccountId <= 0)
+        if (income.ChartOfAccountId <= 0)
         {
-            throw new ArgumentException("Expense account is required.");
+            throw new ArgumentException("Income account is required.");
         }
 
-        if (expense.Amount <= 0)
+        if (income.Amount <= 0)
         {
-            throw new ArgumentException("Expense amount must be greater than zero.");
+            throw new ArgumentException("Income amount must be greater than zero.");
         }
 
-        if (string.IsNullOrWhiteSpace(expense.Description))
+        if (string.IsNullOrWhiteSpace(income.Description))
         {
-            throw new ArgumentException("Expense description is required.");
+            throw new ArgumentException("Income description is required.");
         }
 
-        if (expense.BranchId <= 0)
+        if (income.BranchId <= 0)
         {
             throw new ArgumentException("Branch is required.");
         }

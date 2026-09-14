@@ -23,816 +23,815 @@ namespace SchoolMadrasaManagementSystem.Migrations
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+            {
+                b.Property<string>("Id")
+                    .HasColumnType("text");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                b.Property<string>("Name")
+                    .HasMaxLength(256)
+                    .HasColumnType("character varying(256)");
 
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                b.Property<string>("NormalizedName")
+                    .HasMaxLength(256)
+                    .HasColumnType("character varying(256)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
+                b.HasIndex("NormalizedName")
+                    .IsUnique()
+                    .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", (string)null);
-                });
+                b.ToTable("AspNetRoles", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("text");
+                b.Property<string>("ClaimType")
+                    .HasColumnType("text");
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
+                b.Property<string>("ClaimValue")
+                    .HasColumnType("text");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("RoleId")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
-                });
+                b.ToTable("AspNetRoleClaims", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("text");
+                b.Property<string>("ClaimType")
+                    .HasColumnType("text");
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
+                b.Property<string>("ClaimValue")
+                    .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("UserId")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
-                });
+                b.ToTable("AspNetUserClaims", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+            {
+                b.Property<string>("LoginProvider")
+                    .HasColumnType("text");
 
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("text");
+                b.Property<string>("ProviderKey")
+                    .HasColumnType("text");
 
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("text");
+                b.Property<string>("ProviderDisplayName")
+                    .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("UserId")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.HasKey("LoginProvider", "ProviderKey");
+                b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
-                });
+                b.ToTable("AspNetUserLogins", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+            {
+                b.Property<string>("UserId")
+                    .HasColumnType("text");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("text");
+                b.Property<string>("RoleId")
+                    .HasColumnType("text");
 
-                    b.HasKey("UserId", "RoleId");
+                b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex("RoleId");
+                b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
+                b.ToTable("AspNetUserRoles", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+            {
+                b.Property<string>("UserId")
+                    .HasColumnType("text");
 
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+                b.Property<string>("LoginProvider")
+                    .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+                b.Property<string>("Name")
+                    .HasColumnType("text");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("text");
+                b.Property<string>("Value")
+                    .HasColumnType("text");
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
+                b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
-                });
+                b.ToTable("AspNetUserTokens", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.ActivityLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                b.Property<string>("Action")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)");
 
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("integer");
+                b.Property<int?>("BranchId")
+                    .HasColumnType("integer");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("Date")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Module")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                b.Property<string>("Module")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                b.Property<string>("Status")
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .HasColumnType("character varying(30)");
 
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("interval");
+                b.Property<TimeSpan>("Time")
+                    .HasColumnType("interval");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)");
+                b.Property<string>("UserId")
+                    .IsRequired()
+                    .HasMaxLength(450)
+                    .HasColumnType("character varying(450)");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                b.Property<string>("UserName")
+                    .IsRequired()
+                    .HasMaxLength(150)
+                    .HasColumnType("character varying(150)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                b.HasIndex("BranchId");
 
-                    b.HasIndex("Date");
+                b.HasIndex("Date");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("ActivityLogs", (string)null);
-                });
+                b.ToTable("ActivityLogs", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+            {
+                b.Property<string>("Id")
+                    .HasColumnType("text");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
+                b.Property<int>("AccessFailedCount")
+                    .HasColumnType("integer");
 
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("integer");
+                b.Property<int?>("BranchId")
+                    .HasColumnType("integer");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .HasColumnType("text");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                b.Property<string>("Email")
+                    .HasMaxLength(256)
+                    .HasColumnType("character varying(256)");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
+                b.Property<bool>("EmailConfirmed")
+                    .HasColumnType("boolean");
 
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("FullName")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                b.Property<bool>("IsActive")
+                    .HasColumnType("boolean");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
+                b.Property<bool>("LockoutEnabled")
+                    .HasColumnType("boolean");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTimeOffset?>("LockoutEnd")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                b.Property<string>("NormalizedEmail")
+                    .HasMaxLength(256)
+                    .HasColumnType("character varying(256)");
 
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                b.Property<string>("NormalizedUserName")
+                    .HasMaxLength(256)
+                    .HasColumnType("character varying(256)");
 
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
+                b.Property<string>("PasswordHash")
+                    .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+                b.Property<string>("PhoneNumber")
+                    .HasColumnType("text");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
+                b.Property<bool>("PhoneNumberConfirmed")
+                    .HasColumnType("boolean");
 
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
+                b.Property<string>("SecurityStamp")
+                    .HasColumnType("text");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
+                b.Property<bool>("TwoFactorEnabled")
+                    .HasColumnType("boolean");
 
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                b.Property<string>("UserName")
+                    .HasMaxLength(256)
+                    .HasColumnType("character varying(256)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                b.HasIndex("BranchId");
 
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
+                b.HasIndex("NormalizedEmail")
+                    .HasDatabaseName("EmailIndex");
 
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
+                b.HasIndex("NormalizedUserName")
+                    .IsUnique()
+                    .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", (string)null);
-                });
+                b.ToTable("AspNetUsers", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Branch", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                b.Property<string>("Address")
+                    .HasMaxLength(300)
+                    .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                b.Property<string>("Code")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("character varying(50)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                b.Property<bool>("IsActive")
+                    .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(150)
+                    .HasColumnType("character varying(150)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Branches", (string)null);
-                });
+                b.ToTable("Branches", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.ChartOfAccount", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AccountDescription")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                b.Property<string>("AccountDescription")
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .HasColumnType("character varying(200)");
 
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                b.Property<string>("AccountId")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("character varying(50)");
 
-                    b.Property<string>("AccountType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                b.Property<string>("AccountType")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                b.Property<bool>("IsActive")
+                    .HasColumnType("boolean");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("AccountId")
-                        .IsUnique();
+                b.HasIndex("AccountId")
+                    .IsUnique();
 
-                    b.ToTable("ChartOfAccounts", (string)null);
-                });
+                b.ToTable("ChartOfAccounts", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Expense", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                b.Property<decimal>("Amount")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
+                b.Property<int?>("BranchId")
+                    .HasColumnType("integer");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                b.Property<string>("Category")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)");
 
-                    b.Property<int>("ChartOfAccountId")
-                        .HasColumnType("integer");
+                b.Property<int>("ChartOfAccountId")
+                    .HasColumnType("integer");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("Date")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                b.Property<string>("Description")
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                b.Property<string>("Notes")
+                    .HasMaxLength(500)
+                    .HasColumnType("character varying(500)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                b.HasIndex("BranchId");
 
-                    b.HasIndex("ChartOfAccountId");
+                b.HasIndex("ChartOfAccountId");
 
-                    b.ToTable("Expenses", (string)null);
-                });
+                b.ToTable("Expenses", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Fee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                b.Property<decimal>("Amount")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
+                b.Property<int>("BranchId")
+                    .HasColumnType("integer");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                b.Property<string>("Category")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("Date")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("FeePeriod")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                b.Property<string>("FeePeriod")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                b.Property<string>("Notes")
+                    .HasMaxLength(500)
+                    .HasColumnType("character varying(500)");
 
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                b.Property<string>("SerialNumber")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                b.Property<string>("Status")
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .HasColumnType("character varying(30)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
+                b.Property<int>("StudentId")
+                    .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                b.HasIndex("BranchId");
 
-                    b.HasIndex("SerialNumber")
-                        .IsUnique();
+                b.HasIndex("SerialNumber")
+                    .IsUnique();
 
-                    b.HasIndex("StudentId");
+                b.HasIndex("StudentId");
 
-                    b.ToTable("Fees", (string)null);
-                });
+                b.ToTable("Fees", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Income", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                b.Property<decimal>("Amount")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
+                b.Property<int>("BranchId")
+                    .HasColumnType("integer");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                b.Property<string>("Category")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)");
 
-                    b.Property<int>("ChartOfAccountId")
-                        .HasColumnType("integer");
+                b.Property<int>("ChartOfAccountId")
+                    .HasColumnType("integer");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("Date")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                b.Property<string>("Description")
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                b.Property<string>("Notes")
+                    .HasMaxLength(500)
+                    .HasColumnType("character varying(500)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                b.HasIndex("BranchId");
 
-                    b.HasIndex("ChartOfAccountId");
+                b.HasIndex("ChartOfAccountId");
 
-                    b.ToTable("Income", (string)null);
-                });
+                b.ToTable("Income", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Salary", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Allowances")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                b.Property<decimal>("Allowances")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
 
-                    b.Property<decimal>("BasicSalary")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                b.Property<decimal>("BasicSalary")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
+                b.Property<int>("BranchId")
+                    .HasColumnType("integer");
 
-                    b.Property<decimal>("Deductions")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                b.Property<decimal>("Deductions")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
 
-                    b.Property<decimal>("NetSalary")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                b.Property<decimal>("NetSalary")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                b.Property<string>("Notes")
+                    .HasMaxLength(500)
+                    .HasColumnType("character varying(500)");
 
-                    b.Property<decimal>("PaidAmount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                b.Property<decimal>("PaidAmount")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
 
-                    b.Property<DateTime?>("PaymentDate")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime?>("PaymentDate")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal>("RemainingAmount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                b.Property<decimal>("RemainingAmount")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
 
-                    b.Property<string>("SalaryMonth")
-                        .IsRequired()
-                        .HasMaxLength(7)
-                        .HasColumnType("character varying(7)");
+                b.Property<string>("SalaryMonth")
+                    .IsRequired()
+                    .HasMaxLength(7)
+                    .HasColumnType("character varying(7)");
 
-                    b.Property<int>("StaffId")
-                        .HasColumnType("integer");
+                b.Property<int>("StaffId")
+                    .HasColumnType("integer");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                b.Property<string>("Status")
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .HasColumnType("character varying(30)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                b.HasIndex("BranchId");
 
-                    b.HasIndex("StaffId", "SalaryMonth")
-                        .IsUnique();
+                b.HasIndex("StaffId", "SalaryMonth")
+                    .IsUnique();
 
-                    b.ToTable("Salaries", (string)null);
-                });
+                b.ToTable("Salaries", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Staff", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
+                b.Property<int>("BranchId")
+                    .HasColumnType("integer");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(150)
+                    .HasColumnType("character varying(150)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                b.HasIndex("BranchId");
 
-                    b.ToTable("Staff", (string)null);
-                });
+                b.ToTable("Staff", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Student", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
+                b.Property<int>("BranchId")
+                    .HasColumnType("integer");
 
-                    b.Property<string>("Class")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                b.Property<string>("Class")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(150)
+                    .HasColumnType("character varying(150)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                b.HasIndex("BranchId");
 
-                    b.ToTable("Students", (string)null);
-                });
+                b.ToTable("Students", (string)null);
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.SystemSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AcademicSession")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                b.Property<string>("AcademicSession")
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                b.Property<string>("Address")
+                    .HasMaxLength(300)
+                    .HasColumnType("character varying(300)");
 
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasDefaultValue("PKR");
+                b.Property<string>("Currency")
+                    .IsRequired()
+                    .ValueGeneratedOnAdd()
+                    .HasMaxLength(10)
+                    .HasColumnType("character varying(10)")
+                    .HasDefaultValue("PKR");
 
-                    b.Property<string>("DateFormat")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasDefaultValue("dd/MM/yyyy");
+                b.Property<string>("DateFormat")
+                    .IsRequired()
+                    .ValueGeneratedOnAdd()
+                    .HasMaxLength(30)
+                    .HasColumnType("character varying(30)")
+                    .HasDefaultValue("dd/MM/yyyy");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                b.Property<string>("Email")
+                    .HasMaxLength(150)
+                    .HasColumnType("character varying(150)");
 
-                    b.Property<string>("InstitutionName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                b.Property<string>("InstitutionName")
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .HasColumnType("character varying(200)");
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
+                b.Property<bool>("IsActive")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("boolean")
+                    .HasDefaultValue(true);
 
-                    b.Property<string>("LogoPath")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                b.Property<string>("LogoPath")
+                    .HasMaxLength(500)
+                    .HasColumnType("character varying(500)");
 
-                    b.Property<string>("Phone")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                b.Property<string>("Phone")
+                    .HasMaxLength(50)
+                    .HasColumnType("character varying(50)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("SystemSettings", (string)null);
-                });
+                b.ToTable("SystemSettings", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    .WithMany()
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.ApplicationUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.ApplicationUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    .WithMany()
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.ApplicationUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.ApplicationUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.ActivityLog", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict);
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
+                    .WithMany()
+                    .HasForeignKey("BranchId")
+                    .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Branch");
-                });
+                b.Navigation("Branch");
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.ApplicationUser", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId");
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
+                    .WithMany()
+                    .HasForeignKey("BranchId");
 
-                    b.Navigation("Branch");
-                });
+                b.Navigation("Branch");
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Expense", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
+                    .WithMany()
+                    .HasForeignKey("BranchId")
+                    .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.ChartOfAccount", "ChartOfAccount")
-                        .WithMany()
-                        .HasForeignKey("ChartOfAccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.ChartOfAccount", "ChartOfAccount")
+                    .WithMany()
+                    .HasForeignKey("ChartOfAccountId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Branch");
+                b.Navigation("Branch");
 
-                    b.Navigation("ChartOfAccount");
-                });
+                b.Navigation("ChartOfAccount");
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Fee", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
+                    .WithMany()
+                    .HasForeignKey("BranchId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Student", "Student")
+                    .WithMany()
+                    .HasForeignKey("StudentId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Branch");
+                b.Navigation("Branch");
 
-                    b.Navigation("Student");
-                });
+                b.Navigation("Student");
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Income", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
+                    .WithMany()
+                    .HasForeignKey("BranchId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.ChartOfAccount", "ChartOfAccount")
-                        .WithMany()
-                        .HasForeignKey("ChartOfAccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.ChartOfAccount", "ChartOfAccount")
+                    .WithMany()
+                    .HasForeignKey("ChartOfAccountId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Branch");
+                b.Navigation("Branch");
 
-                    b.Navigation("ChartOfAccount");
-                });
+                b.Navigation("ChartOfAccount");
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Salary", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
+                    .WithMany()
+                    .HasForeignKey("BranchId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Staff", "Staff")
-                        .WithMany()
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Staff", "Staff")
+                    .WithMany()
+                    .HasForeignKey("StaffId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Branch");
+                b.Navigation("Branch");
 
-                    b.Navigation("Staff");
-                });
+                b.Navigation("Staff");
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Staff", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
+                    .WithMany()
+                    .HasForeignKey("BranchId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Branch");
-                });
+                b.Navigation("Branch");
+            });
 
             modelBuilder.Entity("SchoolMadrasaManagementSystem.Entities.Student", b =>
-                {
-                    b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+            {
+                b.HasOne("SchoolMadrasaManagementSystem.Entities.Branch", "Branch")
+                    .WithMany()
+                    .HasForeignKey("BranchId")
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
 
-                    b.Navigation("Branch");
-                });
+                b.Navigation("Branch");
+            });
 #pragma warning restore 612, 618
         }
     }
