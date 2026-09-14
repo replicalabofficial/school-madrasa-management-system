@@ -6,12 +6,14 @@ using SchoolMadrasaManagementSystem.Entities;
 using SchoolMadrasaManagementSystem.Security;
 using SchoolMadrasaManagementSystem.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Controllers Support
+builder.Services.AddControllers();
 
 // Database Configuration
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -88,7 +90,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+// Map Blazor Components
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+// Map API Controllers
+app.MapControllers();
 
 app.Run();
