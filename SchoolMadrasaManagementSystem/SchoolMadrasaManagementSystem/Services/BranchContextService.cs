@@ -1,34 +1,50 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Http;
 using SchoolMadrasaManagementSystem.Data;
+using SchoolMadrasaManagementSystem.Security;
 
-namespace SchoolMadrasaManagementSystem.Services
+namespace SchoolMadrasaManagementSystem.Services;
+
+public class BranchContextService : IBranchContextService
 {
-    public class BranchContextService : IBranchContextService
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public BranchContextService(
+        IHttpContextAccessor httpContextAccessor)
     {
-        private readonly AuthenticationStateProvider _authStateProvider;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-        public BranchContextService(AuthenticationStateProvider authStateProvider)
+    public Task<int?> GetCurrentBranchIdAsync()
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+
+        if (user?.Identity?.IsAuthenticated != true)
         {
-            _authStateProvider = authStateProvider;
+            return Task.FromResult<int?>(null);
         }
 
-        public async Task<int?> GetCurrentBranchIdAsync()
+        var claim = user.FindFirst("BranchId");
+
+        if (claim == null)
         {
-            var authState = await _authStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (!user.Identity?.IsAuthenticated ?? false)
-                return null;
-
-            var branchClaim = user.FindFirst("BranchId")?.Value;
-            return int.TryParse(branchClaim, out var branchId) ? branchId : null;
+            return Task.FromResult<int?>(null);
         }
 
-        public async Task<bool> IsHeadOfficeAdminAsync()
+        if (int.TryParse(claim.Value, out var branchId))
         {
-            var authState = await _authStateProvider.GetAuthenticationStateAsync();
-            return authState.User.IsInRole(Roles.HeadOfficeAdmin);
+            return Task.FromResult<int?>(branchId);
         }
+
+        return Task.FromResult<int?>(null);
+    }
+
+    public Task<bool> IsHeadOfficeAdminAsync()
+    {
+        var user = _httpContextAccessor.HttpContext?.User;
+
+        var result =
+            user?.IsInRole(Roles.HeadOfficeAdmin) == true;
+
+        return Task.FromResult(result);
     }
 }

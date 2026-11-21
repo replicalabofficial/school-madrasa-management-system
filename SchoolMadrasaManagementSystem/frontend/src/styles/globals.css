@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #voucher-print-area,
+    #voucher-print-area * {
+        visibility: visible;
+    }
+
+    #voucher-print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}

@@ -52,7 +52,6 @@ public class SalaryService : ISalaryService
 
         if (salary == null) return null;
 
-        // IDOR Check: Ensure user belongs to the salary's branch
         if (!isHeadOffice && userBranchId != salary.BranchId)
         {
             return null;
@@ -84,10 +83,8 @@ public class SalaryService : ISalaryService
             throw new InvalidOperationException("Selected staff member is not assigned to a branch.");
         }
 
-        // Branch Isolation Guard: User cannot create salary for staff of another branch
         staff.EnsureBranchAccess(userBranchId, isHeadOffice);
 
-        // Force salary BranchId to staff's actual branch
         salary.BranchId = staff.BranchId;
 
         bool duplicate = await _context.Salaries
@@ -127,7 +124,6 @@ public class SalaryService : ISalaryService
             return false;
         }
 
-        // IDOR Guard
         existingSalary.EnsureBranchAccess(userBranchId, isHeadOffice);
 
         if (existingSalary.PaidAmount > 0)
@@ -143,7 +139,6 @@ public class SalaryService : ISalaryService
             throw new InvalidOperationException("Selected staff member does not exist.");
         }
 
-        // Ensure the new target staff is also within the user's branch authorization scope
         staff.EnsureBranchAccess(userBranchId, isHeadOffice);
 
         bool duplicate = await _context.Salaries
@@ -174,7 +169,9 @@ public class SalaryService : ISalaryService
         return true;
     }
 
-    public async Task<bool> MakePaymentAsync(int salaryId, decimal paymentAmount, DateTime paymentDate)
+    public async Task<bool> MakePaymentAsync(
+        int salaryId, decimal paymentAmount, DateTime paymentDate,
+        int chartOfAccountId, int sourceAccountId)
     {
         if (paymentAmount <= 0)
         {
@@ -184,15 +181,13 @@ public class SalaryService : ISalaryService
         var isHeadOffice = await _branchContextService.IsHeadOfficeAdminAsync();
         var userBranchId = await _branchContextService.GetCurrentBranchIdAsync();
 
-        var salary = await _context.Salaries
-            .FirstOrDefaultAsync(x => x.Id == salaryId);
+        var salary = await _context.Salaries.FirstOrDefaultAsync(x => x.Id == salaryId);
 
         if (salary is null)
         {
             return false;
         }
 
-        // Cross-Branch Payment Prevention
         salary.EnsureBranchAccess(userBranchId, isHeadOffice);
 
         if (salary.Status == "Paid")
@@ -205,11 +200,34 @@ public class SalaryService : ISalaryService
             throw new InvalidOperationException("Payment amount cannot be greater than the remaining salary.");
         }
 
+        var expenseAccount = await _context.ChartOfAccounts.FirstOrDefaultAsync(x => x.Id == chartOfAccountId);
+
+        if (expenseAccount is null || !string.Equals(expenseAccount.AccountType, "Expenses", StringComparison.Ordinal))
+        {
+            throw new ArgumentException("Selected account must be an Expense account.");
+        }
+
+        var sourceAccount = await _context.ChartOfAccounts.FirstOrDefaultAsync(x => x.Id == sourceAccountId);
+
+        if (sourceAccount is null || !string.Equals(sourceAccount.AccountType, "Cash", StringComparison.Ordinal))
+        {
+            throw new ArgumentException("Selected account must be a Cash or Bank account.");
+        }
+
         salary.PaidAmount += paymentAmount;
         salary.RemainingAmount = salary.NetSalary - salary.PaidAmount;
         salary.PaymentDate = paymentDate;
-
         salary.Status = salary.RemainingAmount == 0 ? "Paid" : "PartiallyPaid";
+
+        _context.SalaryPayments.Add(new SalaryPayment
+        {
+            SalaryId = salaryId,
+            Amount = paymentAmount,
+            PaymentDate = paymentDate,
+            ChartOfAccountId = chartOfAccountId,
+            SourceAccountId = sourceAccountId,
+            BranchId = salary.BranchId,
+        });
 
         await _context.SaveChangesAsync();
         return true;

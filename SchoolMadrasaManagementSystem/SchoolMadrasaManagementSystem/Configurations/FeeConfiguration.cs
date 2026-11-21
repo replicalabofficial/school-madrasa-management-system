@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SchoolMadrasaManagementSystem.Entities;
 
@@ -46,6 +46,11 @@ public class FeeConfiguration : IEntityTypeConfiguration<Fee>
         builder.HasOne(x => x.Branch)
             .WithMany()
             .HasForeignKey(x => x.BranchId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(x => x.FeePosting)
+            .WithMany()
+            .HasForeignKey(x => x.FeePostingId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(x => x.SerialNumber)

@@ -15,16 +15,8 @@ public class ChartOfAccountService : IChartOfAccountService
 
     private static readonly string[] AllowedAccountTypes =
     {
-        "Cash",
-        "Fixed Assets",
-        "Accounts Receivable",
-        "Inventory",
-        "Accounts Payable",
-        "Equity–Doesn't Close",
-        "Equity–Retained Earnings",
-        "Income",
-        "Cost of Sales",
-        "Expenses"
+        "Cash", "Fixed Assets", "Accounts Receivable", "Inventory", "Accounts Payable",
+        "Equity–Doesn't Close", "Equity–Retained Earnings", "Income", "Cost of Sales", "Expenses"
     };
 
     public ChartOfAccountService(AppDbContext context, IBranchContextService branchContextService)
@@ -35,15 +27,22 @@ public class ChartOfAccountService : IChartOfAccountService
 
     public async Task<List<ChartOfAccount>> GetAllAsync()
     {
-        return await _context.ChartOfAccounts
-            .OrderBy(x => x.AccountId)
-            .ToListAsync();
+        var isHeadOffice = await _branchContextService.IsHeadOfficeAdminAsync();
+        var userBranchId = await _branchContextService.GetCurrentBranchIdAsync();
+
+        var query = _context.ChartOfAccounts.Include(x => x.Branch).AsQueryable();
+
+        if (!isHeadOffice)
+        {
+            query = query.Where(x => x.BranchId == null || x.BranchId == userBranchId);
+        }
+
+        return await query.OrderBy(x => x.AccountId).ToListAsync();
     }
 
     public async Task<ChartOfAccount?> GetByIdAsync(int id)
     {
-        return await _context.ChartOfAccounts
-            .FirstOrDefaultAsync(x => x.Id == id);
+        return await _context.ChartOfAccounts.Include(x => x.Branch).FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<ChartOfAccount> CreateAsync(ChartOfAccount account)
@@ -55,9 +54,7 @@ public class ChartOfAccountService : IChartOfAccountService
 
         ValidateAccount(account);
 
-        bool accountIdExists = await _context.ChartOfAccounts
-            .AnyAsync(x => x.AccountId == account.AccountId);
-
+        bool accountIdExists = await _context.ChartOfAccounts.AnyAsync(x => x.AccountId == account.AccountId);
         if (accountIdExists)
         {
             throw new InvalidOperationException("An account with this Account ID already exists.");
@@ -82,13 +79,8 @@ public class ChartOfAccountService : IChartOfAccountService
 
         ValidateAccount(account);
 
-        var existingAccount = await _context.ChartOfAccounts
-            .FirstOrDefaultAsync(x => x.Id == account.Id);
-
-        if (existingAccount is null)
-        {
-            return false;
-        }
+        var existingAccount = await _context.ChartOfAccounts.FirstOrDefaultAsync(x => x.Id == account.Id);
+        if (existingAccount is null) return false;
 
         bool duplicateAccountId = await _context.ChartOfAccounts
             .AnyAsync(x => x.AccountId == account.AccountId && x.Id != account.Id);
@@ -102,6 +94,7 @@ public class ChartOfAccountService : IChartOfAccountService
         existingAccount.AccountDescription = account.AccountDescription.Trim();
         existingAccount.AccountType = account.AccountType.Trim();
         existingAccount.IsActive = account.IsActive;
+        existingAccount.BranchId = account.BranchId;
 
         await _context.SaveChangesAsync();
         return true;
@@ -114,40 +107,38 @@ public class ChartOfAccountService : IChartOfAccountService
             throw new UnauthorizedAccessException("Only Head Office Admin is authorized to modify the Chart of Accounts.");
         }
 
-        var account = await _context.ChartOfAccounts
-            .FirstOrDefaultAsync(x => x.Id == id);
-
-        if (account is null)
-        {
-            return false;
-        }
+        var account = await _context.ChartOfAccounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null) return false;
 
         account.IsActive = isActive;
         await _context.SaveChangesAsync();
+        return true;
+    }
 
+    public async Task<bool> DeleteAsync(int id)
+    {
+        if (!await _branchContextService.IsHeadOfficeAdminAsync())
+        {
+            throw new UnauthorizedAccessException("Only Head Office Admin is authorized to modify the Chart of Accounts.");
+        }
+
+        var account = await _context.ChartOfAccounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null) return false;
+
+        _context.ChartOfAccounts.Remove(account);
+        await _context.SaveChangesAsync();
         return true;
     }
 
     private static void ValidateAccount(ChartOfAccount account)
     {
         if (string.IsNullOrWhiteSpace(account.AccountId))
-        {
             throw new ArgumentException("Account ID is required.");
-        }
-
         if (string.IsNullOrWhiteSpace(account.AccountDescription))
-        {
             throw new ArgumentException("Account description is required.");
-        }
-
         if (string.IsNullOrWhiteSpace(account.AccountType))
-        {
             throw new ArgumentException("Account type is required.");
-        }
-
         if (!AllowedAccountTypes.Contains(account.AccountType.Trim(), StringComparer.Ordinal))
-        {
             throw new ArgumentException("Invalid account type.");
-        }
     }
 }

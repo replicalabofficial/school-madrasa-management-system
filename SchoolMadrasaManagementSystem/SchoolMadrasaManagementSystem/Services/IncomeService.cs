@@ -88,6 +88,19 @@ public class IncomeService : IIncomeService
 
         income.Category = account.AccountDescription.Trim();
 
+                if (!income.SourceAccountId.HasValue)
+        {
+            throw new ArgumentException("Source account (Cash or Bank) is required.");
+        }
+
+        var sourceAccount = await _context.ChartOfAccounts
+            .FirstOrDefaultAsync(x => x.Id == income.SourceAccountId.Value);
+
+        if (sourceAccount is null || !string.Equals(sourceAccount.AccountType, "Cash", StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException("Selected source account must be a Cash or Bank account.");
+        }
+
         _context.Incomes.Add(income);
         await _context.SaveChangesAsync();
 
@@ -132,6 +145,20 @@ public class IncomeService : IIncomeService
         existing.Date = income.Date;
         existing.ChartOfAccountId = income.ChartOfAccountId;
         existing.Category = account.AccountDescription.Trim();
+        if (!income.SourceAccountId.HasValue)
+        {
+            throw new ArgumentException("Source account (Cash or Bank) is required.");
+        }
+
+        var sourceAccount = await _context.ChartOfAccounts
+            .FirstOrDefaultAsync(x => x.Id == income.SourceAccountId.Value);
+
+        if (sourceAccount is null || !string.Equals(sourceAccount.AccountType, "Cash", StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException("Selected source account must be a Cash or Bank account.");
+        }
+
+        existing.SourceAccountId = income.SourceAccountId;
         existing.Amount = income.Amount;
         existing.Description = income.Description.Trim();
 
@@ -142,6 +169,21 @@ public class IncomeService : IIncomeService
 
         existing.Notes = income.Notes?.Trim();
 
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var isHeadOffice = await _branchContextService.IsHeadOfficeAdminAsync();
+        var userBranchId = await _branchContextService.GetCurrentBranchIdAsync();
+
+        var existing = await _context.Incomes.FirstOrDefaultAsync(x => x.Id == id);
+        if (existing is null) return false;
+
+        existing.EnsureBranchAccess(userBranchId, isHeadOffice);
+
+        _context.Incomes.Remove(existing);
         await _context.SaveChangesAsync();
         return true;
     }

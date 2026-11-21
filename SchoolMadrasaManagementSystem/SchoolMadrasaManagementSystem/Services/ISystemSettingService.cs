@@ -13,5 +13,9 @@ namespace SchoolMadrasaManagementSystem.Services
 
         Task<SystemSettingDto> InitializeAsync(
             CancellationToken cancellationToken = default);
+
+        Task<SystemSettingDto> UpdateLogoAsync(string logoPath, CancellationToken cancellationToken = default);
     }
+
+
 }

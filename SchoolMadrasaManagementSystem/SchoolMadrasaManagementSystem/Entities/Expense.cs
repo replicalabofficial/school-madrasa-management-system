@@ -23,5 +23,11 @@ public class Expense : IBranchEntity
 
     public Branch Branch { get; set; } = null!;
 
+    public int? SourceAccountId { get; set; }
+
+    public bool IsReconciled { get; set; }
+    public DateTime? ReconciledAt { get; set; }
+    public ChartOfAccount? SourceAccount { get; set; }
+
     public string? Notes { get; set; }
 }

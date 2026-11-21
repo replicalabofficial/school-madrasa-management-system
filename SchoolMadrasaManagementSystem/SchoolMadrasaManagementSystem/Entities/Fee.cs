@@ -1,4 +1,4 @@
-﻿namespace SchoolMadrasaManagementSystem.Entities;
+namespace SchoolMadrasaManagementSystem.Entities;
 
 public class Fee
 {
@@ -22,7 +22,24 @@ public class Fee
 
     public string? Notes { get; set; }
 
+    public string? Description { get; set; }
+    public decimal DiscountAmount { get; set; }
+    public string? DiscountApprovalStatus { get; set; }
+
     public int BranchId { get; set; }
 
     public Branch Branch { get; set; } = null!;
+
+    public int? ChartOfAccountId { get; set; }
+    public ChartOfAccount? ChartOfAccount { get; set; }
+    public int? SourceAccountId { get; set; }
+
+    public DateTime? PaidDate { get; set; }
+    public bool IsReconciled { get; set; }
+    public DateTime? ReconciledAt { get; set; }
+    public ChartOfAccount? SourceAccount { get; set; }
+
+    // Set when the fee was created by a Monthly Fee Posting
+    public int? FeePostingId { get; set; }
+    public FeePosting? FeePosting { get; set; }
 }

@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SchoolMadrasaManagementSystem.Entities;
 using SchoolMadrasaManagementSystem.Reports;
+using SchoolMadrasaManagementSystem.Security;
 using SchoolMadrasaManagementSystem.Services;
 
 namespace SchoolMadrasaManagementSystem.Controllers;
 
 [Authorize]
 [ApiController]
+[RequireModuleAccess(BranchModules.Reports)]
 [Route("api/[controller]")]
 public class ReportsController : ControllerBase
 {

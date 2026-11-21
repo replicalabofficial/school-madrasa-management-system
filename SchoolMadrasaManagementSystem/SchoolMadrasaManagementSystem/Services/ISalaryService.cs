@@ -12,8 +12,8 @@ public interface ISalaryService
 
     Task<bool> UpdateAsync(Salary salary);
 
-    Task<bool> MakePaymentAsync(
-        int salaryId,
-        decimal paymentAmount,
-        DateTime paymentDate);
+
+    Task<bool> MakePaymentAsync(int salaryId, decimal paymentAmount, DateTime paymentDate, int chartOfAccountId, int sourceAccountId);
+
+    
 }

@@ -15,4 +15,10 @@ public interface IUserManagementService
     Task<bool> SetActiveStatusAsync(
         string userId,
         bool isActive);
+
+    Task<bool> ResetPasswordAsync(
+        string userId,
+        string newPassword);
+
+    Task<bool> DeleteAsync(string userId);
 }

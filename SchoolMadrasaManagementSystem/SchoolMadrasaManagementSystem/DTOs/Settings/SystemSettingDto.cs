@@ -10,7 +10,9 @@
 
         public string? Phone { get; set; }
 
-        public string? Email { get; set; }
+        public string? Email { get; set; } 
+
+
 
         public string Currency { get; set; } = string.Empty;
 

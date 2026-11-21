@@ -11,4 +11,6 @@ public interface IIncomeService
     Task<Income> CreateAsync(Income income);
 
     Task<bool> UpdateAsync(Income income);
+
+    Task<bool> DeleteAsync(int id);
 }

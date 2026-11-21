@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SchoolMadrasaManagementSystem.Data;
@@ -12,10 +13,14 @@ namespace SchoolMadrasaManagementSystem.Services;
 
 public class UserManagementService : IUserManagementService
 {
+    private const string HeadOfficeRole = "HeadOfficeAdmin";
+    private const int MinPasswordLength = 8;
+
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly AppDbContext _context;
     private readonly IBranchContextService _branchContextService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     private static readonly string[] AllowedRoles =
     {
@@ -28,12 +33,14 @@ public class UserManagementService : IUserManagementService
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
         AppDbContext context,
-        IBranchContextService branchContextService)
+        IBranchContextService branchContextService,
+        IHttpContextAccessor httpContextAccessor)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _context = context;
         _branchContextService = branchContextService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     private async Task EnsureHeadOfficeAdminAsync()
@@ -43,6 +50,23 @@ public class UserManagementService : IUserManagementService
         {
             throw new UnauthorizedAccessException("Access denied. User Management operations are restricted to Head Office Administrators.");
         }
+    }
+
+    // Id of the user making this request
+    private string? CurrentUserId
+    {
+        get
+        {
+            var principal = _httpContextAccessor.HttpContext?.User;
+            return principal is null ? null : _userManager.GetUserId(principal);
+        }
+    }
+
+    // Active Head Office accounts, optionally ignoring one user
+    private async Task<int> CountActiveHeadOfficeAsync(string? excludeUserId = null)
+    {
+        var headOfficeUsers = await _userManager.GetUsersInRoleAsync(HeadOfficeRole);
+        return headOfficeUsers.Count(u => u.IsActive && u.Id != excludeUserId);
     }
 
     public async Task<List<UserDto>> GetAllAsync()
@@ -163,8 +187,9 @@ public class UserManagementService : IUserManagementService
         await EnsureHeadOfficeAdminAsync();
         ValidateUpdateRequest(request);
 
-        ValidateRoleAndBranch(request.Role, request.BranchId);
-        await ValidateRoleExistsAsync(request.Role.Trim());
+        var newRole = request.Role?.Trim() ?? string.Empty;
+        ValidateRoleAndBranch(newRole, request.BranchId);
+        await ValidateRoleExistsAsync(newRole);
 
         var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.Id);
 
@@ -173,7 +198,37 @@ public class UserManagementService : IUserManagementService
             return false;
         }
 
-        var branch = await GetBranchAsync(request.BranchId);
+        await GetBranchAsync(request.BranchId);
+
+        var existingRoles = await _userManager.GetRolesAsync(user);
+        var wasHeadOffice = existingRoles.Contains(HeadOfficeRole);
+        var roleChanged = !(existingRoles.Count == 1 && existingRoles[0] == newRole);
+        var isSelf = user.Id == CurrentUserId;
+
+        // You cannot lock yourself out
+        if (isSelf && !request.IsActive)
+        {
+            throw new InvalidOperationException("You cannot deactivate your own account.");
+        }
+
+        if (isSelf && newRole != HeadOfficeRole)
+        {
+            throw new InvalidOperationException("You cannot remove Head Office access from your own account.");
+        }
+
+        // Keep at least one active Head Office account
+        var losesHeadOffice = wasHeadOffice && (newRole != HeadOfficeRole || !request.IsActive);
+        if (losesHeadOffice && await CountActiveHeadOfficeAsync(excludeUserId: user.Id) == 0)
+        {
+            throw new InvalidOperationException("At least one active Head Office account is required.");
+        }
+
+        // Changes that must sign the user out of existing sessions
+        var accessChanged = roleChanged
+            || user.BranchId != request.BranchId
+            || user.IsActive != request.IsActive;
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
 
         user.UserName = request.UserName.Trim();
         user.Email = request.Email.Trim();
@@ -189,21 +244,33 @@ public class UserManagementService : IUserManagementService
                 string.Join(" ", updateResult.Errors.Select(x => x.Description)));
         }
 
-        var existingRoles = await _userManager.GetRolesAsync(user);
-
-        if (existingRoles.Count > 0)
+        if (roleChanged)
         {
-            await _userManager.RemoveFromRolesAsync(user, existingRoles);
+            if (existingRoles.Count > 0)
+            {
+                var removeResult = await _userManager.RemoveFromRolesAsync(user, existingRoles);
+                if (!removeResult.Succeeded)
+                {
+                    throw new InvalidOperationException(
+                        string.Join(" ", removeResult.Errors.Select(x => x.Description)));
+                }
+            }
+
+            var roleResult = await _userManager.AddToRoleAsync(user, newRole);
+
+            if (!roleResult.Succeeded)
+            {
+                throw new InvalidOperationException(
+                    string.Join(" ", roleResult.Errors.Select(x => x.Description)));
+            }
         }
 
-        var roleResult = await _userManager.AddToRoleAsync(user, request.Role.Trim());
-
-        if (!roleResult.Succeeded)
+        if (accessChanged)
         {
-            throw new InvalidOperationException(
-                string.Join(" ", roleResult.Errors.Select(x => x.Description)));
+            await _userManager.UpdateSecurityStampAsync(user);
         }
 
+        await transaction.CommitAsync();
         return true;
     }
 
@@ -218,8 +285,99 @@ public class UserManagementService : IUserManagementService
             return false;
         }
 
+        if (!isActive)
+        {
+            if (user.Id == CurrentUserId)
+            {
+                throw new InvalidOperationException("You cannot deactivate your own account.");
+            }
+
+            if (await _userManager.IsInRoleAsync(user, HeadOfficeRole)
+                && await CountActiveHeadOfficeAsync(excludeUserId: user.Id) == 0)
+            {
+                throw new InvalidOperationException("At least one active Head Office account is required.");
+            }
+        }
+
         user.IsActive = isActive;
         var result = await _userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+        {
+            throw new InvalidOperationException(
+                string.Join(" ", result.Errors.Select(x => x.Description)));
+        }
+
+        if (!isActive)
+        {
+            // Sign the user out of any open session
+            await _userManager.UpdateSecurityStampAsync(user);
+        }
+
+        return true;
+    }
+
+    public async Task<bool> ResetPasswordAsync(string userId, string newPassword)
+    {
+        await EnsureHeadOfficeAdminAsync();
+
+        if (string.IsNullOrWhiteSpace(newPassword))
+        {
+            throw new ArgumentException("New password is required.");
+        }
+
+        if (newPassword.Length < MinPasswordLength)
+        {
+            throw new ArgumentException($"Password must contain at least {MinPasswordLength} characters.");
+        }
+
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+        if (user is null)
+        {
+            return false;
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+        if (!result.Succeeded)
+        {
+            throw new InvalidOperationException(
+                string.Join(" ", result.Errors.Select(x => x.Description)));
+        }
+
+        // Clear any lockout and sign out existing sessions
+        await _userManager.SetLockoutEndDateAsync(user, null);
+        await _userManager.ResetAccessFailedCountAsync(user);
+        await _userManager.UpdateSecurityStampAsync(user);
+
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(string userId)
+    {
+        await EnsureHeadOfficeAdminAsync();
+
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+        if (user is null)
+        {
+            return false;
+        }
+
+        if (user.Id == CurrentUserId)
+        {
+            throw new InvalidOperationException("You cannot delete your own account.");
+        }
+
+        if (await _userManager.IsInRoleAsync(user, HeadOfficeRole)
+            && await CountActiveHeadOfficeAsync(excludeUserId: user.Id) == 0)
+        {
+            throw new InvalidOperationException("Cannot delete the last remaining Head Office account.");
+        }
+
+        var result = await _userManager.DeleteAsync(user);
 
         if (!result.Succeeded)
         {
@@ -279,7 +437,7 @@ public class UserManagementService : IUserManagementService
             throw new ArgumentException("Invalid role.");
         }
 
-        if (role == "HeadOfficeAdmin")
+        if (role == HeadOfficeRole)
         {
             if (branchId.HasValue)
             {
@@ -317,9 +475,9 @@ public class UserManagementService : IUserManagementService
             throw new ArgumentException("Password is required.");
         }
 
-        if (request.Password.Length < 6)
+        if (request.Password.Length < MinPasswordLength)
         {
-            throw new ArgumentException("Password must contain at least 6 characters.");
+            throw new ArgumentException($"Password must contain at least {MinPasswordLength} characters.");
         }
     }
 

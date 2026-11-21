@@ -103,6 +103,21 @@ namespace SchoolMadrasaManagementSystem.Services
             return MapToDto(setting);
         }
 
+        public async Task<SystemSettingDto> UpdateLogoAsync(string logoPath, CancellationToken cancellationToken = default)
+        {
+            var setting = await _context.SystemSettings.FirstOrDefaultAsync(cancellationToken);
+
+            if (setting is null)
+            {
+                throw new InvalidOperationException("System settings must be initialized before uploading a logo.");
+            }
+
+            setting.LogoPath = logoPath;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return MapToDto(setting);
+        }
+
         private static SystemSettingDto MapToDto(
             SystemSetting setting)
         {

@@ -10,4 +10,6 @@ public interface IDashboardService
     Task<BranchDashboardDto?> GetBranchDashboardAsync(
         int branchId,
         DashboardFilter filter);
+
+    Task<StudentAdmissionStatsDto> GetStudentAdmissionStatsAsync();
 }

@@ -8,16 +8,28 @@ public class HeadOfficeDashboardDto
 
     public int TotalStaff { get; set; }
 
+    // Income = Other income (Income page) + Fees collected (paid fees)
+    public decimal OtherIncome { get; set; }
+
+    public decimal FeesCollected { get; set; }
+
     public decimal TotalIncome { get; set; }
+
+    // Expenses = Operating expenses (Expenses page) + Salaries paid
+    public decimal OperatingExpenses { get; set; }
+
+    public decimal SalariesPaid { get; set; }
 
     public decimal TotalExpenses { get; set; }
 
+    // Kept for compatibility (same as SalariesPaid)
     public decimal TotalSalaries { get; set; }
 
     public decimal OutstandingFees { get; set; }
 
     public decimal UnpaidSalaries { get; set; }
 
+    // Net Balance = Total Income - Total Expenses
     public decimal NetBalance { get; set; }
 
     public List<DashboardCategoryDto> IncomeOverview { get; set; } = new();
@@ -42,13 +54,24 @@ public class BranchDashboardDto
 
     public int TotalStaff { get; set; }
 
+    // Fees billed in the period
     public decimal TotalFees { get; set; }
+
+    public decimal FeesCollected { get; set; }
 
     public decimal OutstandingFees { get; set; }
 
+    public decimal OtherIncome { get; set; }
+
     public decimal TotalIncome { get; set; }
 
+    public decimal OperatingExpenses { get; set; }
+
+    public decimal SalariesPaid { get; set; }
+
     public decimal TotalExpenses { get; set; }
+
+    public decimal UnpaidSalaries { get; set; }
 
     public decimal NetBalance { get; set; }
 }
@@ -80,12 +103,16 @@ public class BranchDashboardFinancialDto
 
     public string BranchName { get; set; } = string.Empty;
 
+    // Other income (Income page)
     public decimal Income { get; set; }
 
+    // Operating expenses (Expenses page)
     public decimal Expenses { get; set; }
 
+    // Salaries paid
     public decimal Salaries { get; set; }
 
+    // Fees collected
     public decimal Fees { get; set; }
 
     public decimal NetBalance { get; set; }

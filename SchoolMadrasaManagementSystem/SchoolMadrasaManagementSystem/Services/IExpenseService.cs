@@ -11,4 +11,6 @@ public interface IExpenseService
     Task<Expense> CreateAsync(Expense expense);
 
     Task<bool> UpdateAsync(Expense expense);
+
+    Task<bool> DeleteAsync(int id);
 }
