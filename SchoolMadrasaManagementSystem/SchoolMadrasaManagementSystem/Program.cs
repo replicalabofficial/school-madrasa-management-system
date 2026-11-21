@@ -20,7 +20,27 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
     options.ForwardLimit = 2;
+
+    // Cloud hosts (Render etc.) put their own proxies in front: trust them (env TrustProxies=true)
+    if (string.Equals(builder.Configuration["TrustProxies"], "true", StringComparison.OrdinalIgnoreCase))
+    {
+        options.KnownNetworks.Clear();
+        options.KnownProxies.Clear();
+    }
 });
+
+// Cloud hosts give the database as a URL (postgres://user:pass@host:port/db) -> convert for Npgsql
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+if (!string.IsNullOrWhiteSpace(databaseUrl) && databaseUrl.StartsWith("postgres", StringComparison.OrdinalIgnoreCase))
+{
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':', 2);
+    var dbPort = uri.Port > 0 ? uri.Port : 5432;
+    builder.Configuration["ConnectionStrings:DefaultConnection"] =
+        $"Host={uri.Host};Port={dbPort};Database={uri.AbsolutePath.TrimStart('/')};" +
+        $"Username={Uri.UnescapeDataString(userInfo[0])};Password={Uri.UnescapeDataString(userInfo.ElementAtOrDefault(1) ?? string.Empty)};" +
+        "SSL Mode=Prefer;Trust Server Certificate=true";
+}
 
 // Rate Limiting (login brute-force protection) — per IP, not system-wide
 builder.Services.AddRateLimiter(options =>
@@ -197,6 +217,12 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
+        // Cloud demo: create/update tables automatically on start (env RunMigrations=true)
+        if (string.Equals(builder.Configuration["RunMigrations"], "true", StringComparison.OrdinalIgnoreCase))
+        {
+            await services.GetRequiredService<AppDbContext>().Database.MigrateAsync();
+        }
+
         await DbInitializer.SeedAsync(services);
     }
     catch (Exception ex)

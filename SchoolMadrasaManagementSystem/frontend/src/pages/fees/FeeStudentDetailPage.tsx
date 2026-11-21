@@ -9,8 +9,6 @@ import { feesApi } from '../../api/feesApi'
 import { brandingApi } from '../../api/brandingApi'
 import { useAuthStore } from '../../stores/authStore'
 import { approvedDiscount, netAmount, printFeeReceipt, printFeeSlip } from '../../utils/feeReceipt'
-import { MessageButtons } from '../../components/common/MessageButtons'
-import { duesMessage, receiptMessage } from '../../utils/parentMessage'
 import type { ApiErrorPayload } from '../../api/client'
 import type { Fee } from '../../types/fee'
 
@@ -175,20 +173,6 @@ export function FeeStudentDetailPage() {
                             <Printer className="mr-1.5 h-4 w-4" />
                             Print Receipt
                         </Button>
-                        {student && (
-                            <MessageButtons
-                                phone={student.parentPhone}
-                                text={receiptMessage(
-                                    { name: student.name, grNumber: student.grNumber },
-                                    justPaid.map((f) => `${f.category} ${f.feePeriod}`),
-                                    justPaid.reduce((s, f) => s + netAmount(f), 0),
-                                    justPaid.length === 1
-                                        ? justPaid[0].serialNumber
-                                        : `RCPT-${student.grNumber}-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`,
-                                    brandingQuery.data?.institutionName,
-                                )}
-                            />
-                        )}
                         <Button variant="secondary" onClick={() => setJustPaid(null)}>
                             Close
                         </Button>
@@ -228,18 +212,6 @@ export function FeeStudentDetailPage() {
                             ? `Print Due Slip (${selectedUnpaid.length} selected)`
                             : `Print Due Slip (all · ${money(totalDue)})`}
                 </Button>
-
-                {student && totalDue > 0 && (
-                    <MessageButtons
-                        phone={student.parentPhone}
-                        text={duesMessage(
-                            { name: student.name, grNumber: student.grNumber },
-                            totalDue,
-                            unpaidFees.map((f) => f.feePeriod),
-                            brandingQuery.data?.institutionName,
-                        )}
-                    />
-                )}
 
                 <Link to={`/fees/ledger/${numericStudentId}`}>
                     <Button variant="ghost">

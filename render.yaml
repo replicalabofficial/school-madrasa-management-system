@@ -1,0 +1,48 @@
+# EFAS demo on Render (free): database + backend + frontend
+# Render > New > Blueprint > is repo ko chunein > Apply
+databases:
+  - name: efas-demo-db
+    plan: free
+    region: singapore
+    databaseName: efas
+    user: efas
+
+services:
+  - type: web
+    name: efas-demo-api
+    runtime: docker
+    plan: free
+    region: singapore
+    rootDir: SchoolMadrasaManagementSystem/SchoolMadrasaManagementSystem
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: RunMigrations
+        value: "true"
+      - key: TrustProxies
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: efas-demo-db
+          property: connectionString
+
+  - type: web
+    name: efas-demo
+    runtime: static
+    rootDir: SchoolMadrasaManagementSystem/frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_DEMO
+        value: "true"
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://efas-demo-api.onrender.com/api/*
+      - type: rewrite
+        source: /uploads/*
+        destination: https://efas-demo-api.onrender.com/uploads/*
+      - type: rewrite
+        source: /*
+        destination: /index.html

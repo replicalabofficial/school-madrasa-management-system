@@ -3,12 +3,10 @@ import { useQuery } from '@tanstack/react-query'
 import { AlertCircle, ArrowLeft, Loader2, Printer, Users } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
-import { MessageButtons } from '../../components/common/MessageButtons'
 import { feeReportsApi } from '../../api/feeReportsApi'
 import { brandingApi } from '../../api/brandingApi'
 import { API_ORIGIN, type ApiErrorPayload } from '../../api/client'
 import { buildBrandedHeader, printHtml } from '../../utils/printHtml'
-import { duesMessage, familyDuesMessage } from '../../utils/parentMessage'
 import type { StudentLedger } from '../../types/feeReports'
 
 const money = new Intl.NumberFormat('en-PK', { maximumFractionDigits: 0 })
@@ -58,12 +56,6 @@ export function StudentLedgerPage() {
         )
     }
 
-    // Periods of fees that have no payment line yet
-    const paidIds = new Set((l?.lines ?? []).filter((x) => x.type === 'Payment').map((x) => x.feeId))
-    const duePeriods = (l?.lines ?? [])
-        .filter((x) => x.type === 'Fee' && x.debit > 0 && !paidIds.has(x.feeId))
-        .map((x) => x.description.split(' · ')[1] ?? x.description)
-
     return (
         <div className="space-y-6">
             <button type="button" onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800">
@@ -104,9 +96,6 @@ export function StudentLedgerPage() {
                             </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                            {l.balance > 0 && (
-                                <MessageButtons phone={l.parentPhone} text={duesMessage({ name: l.name, grNumber: l.grNumber }, l.balance, duePeriods.slice(-6), institution)} />
-                            )}
                             <Link to={`/fees/student/${l.studentId}`}>
                                 <Button variant="secondary">Receive fee</Button>
                             </Link>
@@ -185,13 +174,6 @@ export function StudentLedgerPage() {
                                     <span>
                                         Family total due: <b className={l.familyDue > 0 ? 'text-red-600' : 'text-emerald-700'}>Rs {fmt(l.familyDue)}</b>
                                     </span>
-                                    {l.familyDue > 0 && (
-                                        <MessageButtons
-                                            compact
-                                            phone={l.parentPhone}
-                                            text={familyDuesMessage(l.fatherName, l.familyDue, [{ name: l.name, due: l.balance }, ...l.family.map((m) => ({ name: m.name, due: m.due }))], institution)}
-                                        />
-                                    )}
                                 </span>
                             )}
                         </div>

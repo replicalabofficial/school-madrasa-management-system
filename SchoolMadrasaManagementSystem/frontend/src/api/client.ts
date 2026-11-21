@@ -1,7 +1,8 @@
 import axios, { type AxiosError } from 'axios'
 
-export const API_BASE_URL = 'https://localhost:7013/api'
-export const API_ORIGIN = 'https://localhost:7013'
+// Dev: backend on localhost:7013. Production: same domain (Nginx forwards /api to the backend)
+export const API_ORIGIN = import.meta.env.DEV ? 'https://localhost:7013' : ''
+export const API_BASE_URL = `${API_ORIGIN}/api`
 
 export const apiClient = axios.create({
     baseURL: API_BASE_URL,

@@ -5,14 +5,12 @@ import { AlertCircle, Loader2, Printer, Search } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
-import { MessageButtons } from '../../components/common/MessageButtons'
 import { feeReportsApi } from '../../api/feeReportsApi'
 import { branchesApi } from '../../api/branchesApi'
 import { brandingApi } from '../../api/brandingApi'
 import { useAuthStore } from '../../stores/authStore'
 import { API_ORIGIN, type ApiErrorPayload } from '../../api/client'
 import { buildBrandedHeader, printHtml } from '../../utils/printHtml'
-import { duesMessage } from '../../utils/parentMessage'
 import type { LeftStudentsDues } from '../../types/feeReports'
 
 const money = new Intl.NumberFormat('en-PK', { maximumFractionDigits: 0 })
@@ -156,13 +154,12 @@ export function LeftStudentsDuesPage() {
                                         <th className="px-4 py-3 font-medium">Father / Phone</th>
                                         <th className="px-4 py-3 text-right font-medium">Due</th>
                                         <th className="px-4 py-3 font-medium">Siblings studying</th>
-                                        <th className="px-4 py-3 font-medium">Remind</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {rows.length === 0 && (
                                         <tr>
-                                            <td colSpan={9} className="px-4 py-6 text-center text-slate-400">
+                                            <td colSpan={8} className="px-4 py-6 text-center text-slate-400">
                                                 No left students with dues.
                                             </td>
                                         </tr>
@@ -199,9 +196,6 @@ export function LeftStudentsDuesPage() {
                                                         </div>
                                                     ))
                                                 )}
-                                            </td>
-                                            <td className="px-4 py-2.5">
-                                                <MessageButtons compact phone={x.parentPhone} text={duesMessage({ name: x.name, grNumber: x.grNumber }, x.due, [], institution)} />
                                             </td>
                                         </tr>
                                     ))}

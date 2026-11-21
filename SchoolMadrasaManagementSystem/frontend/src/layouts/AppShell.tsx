@@ -26,6 +26,11 @@ export function AppShell() {
                     }`}
             >
                 <div className="p-4 sm:p-6">
+                    {import.meta.env.VITE_DEMO === 'true' && (
+                        <div className="mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm text-amber-900">
+                            <b>DEMO</b> — Ye EFAS ka demo version hai. Yahan ka saara data 30 November ko saaf kar diya jayega.
+                        </div>
+                    )}
                     <Outlet />
                 </div>
             </main>
